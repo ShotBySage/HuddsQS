@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Home | Hudds Queer Social</title>
+
+<meta
+  name="description"
+  content="Hudds Queer Social — inclusive community, events and resources for LGBTQIA+ people and allies in Huddersfield."
+>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="site">
+
+  <!-- HEADER -->
+  <header>
+    <div class="topline">
+
+      <a class="brand" href="index.html">
+
+        <img
+          src="assets/hqs-logo.jpg"
+          alt="Hudds Queer Social logo"
+        >
+
+        <div>
+          <div class="brand-title">
+            Hudds Queer Social
+          </div>
+
+          <div class="brand-sub">
+            Huddersfield · LGBTQIA+ Community
+          </div>
+        </div>
+
+      </a>
+
+
+      <!-- MOBILE MENU BUTTON -->
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+        aria-controls="main-navigation"
+        onclick="toggleMenu()"
+      >
+        ☰
+      </button>
+
+
+      <!-- NAVIGATION -->
+      <nav
+        id="main-navigation"
+        aria-label="Main navigation"
+      >
+
+        <a
+          href="index.html"
+          aria-current="page"
+        >
+          Home
+        </a>
+
+        <a href="about.html">
+          About
+        </a>
+
+        <a href="events.html">
+          Events
+        </a>
+
+        <a href="community.html">
+          Community
+        </a>
+
+        <a href="newsletter.html">
+          Newsletter
+        </a>
+
+        <a href="contact.html">
+          Contact
+        </a>
+
+      </nav>
+
+    </div>
+  </header>
+
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+
+      <div>
+
+        <div class="kicker">
+          An inclusive Huddersfield Queer community
+        </div>
+
+
+        <h1>
+          <span>Hudds</span>
+          <span>Queer</span>
+          <span>Social</span>
+        </h1>
+
+
+        <p class="hero-copy">
+          A welcoming space for LGBTQIA+ people and allies in Huddersfield.
+          Find community, discover events, share creativity and connect with
+          people who get it.
+        </p>
+
+
+        <div class="hero-actions">
+
+          <a
+            class="btn"
+            href="events.html"
+          >
+            See upcoming events
+          </a>
+
+          <a
+            class="btn secondary"
+            href="about.html"
+          >
+            About HQS
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <div class="hero-photo">
+
+        <span class="tape"></span>
+
+        <img
+          src="assets/community.jpg"
+          alt="Hudds Queer Social community stall at an event"
+        >
+
+      </div>
+
+    </section>
+
+
+    <!-- UPCOMING EVENTS -->
+    <section class="section">
+
+      <div class="section-heading">
+
+        <h2 class="under">
+          What's happening?
+        </h2>
+
+        <a href="events.html">
+          All events →
+        </a>
+
+      </div>
+
+
+      <div
+        class="events"
+        id="homepage-events"
+      >
+
+        <p>
+          Loading events...
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- ABOUT -->
+    <section class="section">
+
+      <div class="about-grid">
+
+
+        <figure class="polaroid">
+
+          <img
+            src="assets/craft.jpg"
+            alt="A community member taking part in a creative activity"
+          >
+
+          <figcaption>
+            Making space together ✦
+          </figcaption>
+
+        </figure>
+
+
+        <div class="about-text">
+
+          <div class="kicker">
+            About HQS
+          </div>
+
+
+          <h2 class="under">
+            Everyone deserves a place to belong.
+          </h2>
+
+
+          <p>
+            We recognise the diversity and strengths within Huddersfield
+            and believe there are not enough affirming spaces for the
+            LGBTQIA+ community.
+          </p>
+
+
+          <p>
+            The HQS committee dedicate their own time to creating safe
+            spaces and finding inclusive places for our community to
+            enjoy and thrive within.
+          </p>
+
+
+          <p>
+            Everyone under the LGBTQIA+ umbrella and our allies are
+            welcome at HQS activities.
+          </p>
+
+
+          <a
+            class="btn"
+            href="about.html"
+          >
+            Read more
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer>
+
+    <div>
+
+      <strong>
+        Hudds Queer Social
+      </strong>
+
+      <br>
+
+      Creating space for our community.
+
+    </div>
+
+
+    <div>
+
+      <a
+        href="https://www.instagram.com/huddsqueersocial?stkn=bHljdDIxYmRwODU="
+        target="_blank"
+        rel="noopener"
+      >
+        Instagram
+      </a>
+
+      ·
+
+      <span class="link-needed">
+        Facebook — LINK NEEDED
+      </span>
+
+      ·
+
+      <span class="link-needed">
+        Join the community — FORM NEEDED
+      </span>
+
+      <br>
+
+      <small>
+        © 2026 Hudds Queer Social
+      </small>
+
+    </div>
+
+  </footer>
+
+</div>
+
+
+<!-- EVENTS -->
+<script src="events.js"></script>
+
+<script>
+function toggleMenu() {
+
+  const nav = document.getElementById("main-navigation");
+  const button = document.querySelector(".menu-toggle");
+
+  const isOpen = nav.classList.toggle("menu-open");
+
+  button.setAttribute(
+    "aria-expanded",
+    isOpen
+  );
+
+  button.setAttribute(
+    "aria-label",
+    isOpen
+      ? "Close navigation"
+      : "Open navigation"
+  );
+}
+
+loadHomepageEvents();
+</script>
+
+
+</body>
+</html>
