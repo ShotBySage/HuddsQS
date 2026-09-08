@@ -1,189 +1,340 @@
-async function loadEvents() {
-  try {
-    const response = await fetch("events.json");
-
-    if (!response.ok) {
-      throw new Error("Could not load events.json");
-    }
-
-    const data = await response.json();
-
-    // Today's date at midnight
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    // Keep today and future events only
-    return data.events
-      .filter(event => {
-        const eventDate = new Date(event.date + "T23:59:59");
-        return eventDate >= today;
-      })
-      .sort((a, b) => {
-        return new Date(a.date) - new Date(b.date);
-      });
-
-  } catch (error) {
-    console.error("Error loading events:", error);
-    return [];
+const events = [
+  {
+    date: "2026-09-12",
+    time: "Noon",
+    title: "Protect for No Leeds Data Centre",
+    venue: "Millennium Square, Leeds",
+    description: "Join the Protect for No Leeds Data Centre action in Leeds.",
+    cost: "FREE"
+  },
+  {
+    date: "2026-09-13",
+    time: "11am",
+    title: "Silent Book Club",
+    venue: "Hive Cafe",
+    description: "A relaxed silent reading session. Bring whatever you're currently reading and enjoy some quiet company.",
+    cost: "FREE"
+  },
+  {
+    date: "2026-09-13",
+    time: "10:30am–1pm",
+    title: "Lino and Tie Dye",
+    venue: "Thread Republic",
+    description: "A creative lino and tie dye session at Thread Republic.",
+    cost: "PAID · AMOUNT TO BE ADDED"
+  },
+  {
+    date: "2026-09-13",
+    time: "1:30pm",
+    title: "Pigeon Feeding Meet",
+    venue: "Greenhead Park · Meet at the Cafe in the Park",
+    description: "Pigeon Feeding Meets take place every Sunday at Greenhead Park.",
+    cost: "FREE"
+  },
+  {
+    date: "2026-09-15",
+    time: "6pm",
+    title: "Sew Queer",
+    venue: "Hive Cafe",
+    description: "A relaxed sewing session and chance to get creative with others.",
+    cost: "£2"
+  },
+  {
+    date: "2026-09-19",
+    time: "TBC",
+    title: "Knitting Pub & Cafe Crawl",
+    venue: "Details to be confirmed",
+    description: "A knitting-themed pub and cafe crawl.",
+    cost: "FREE"
+  },
+  {
+    date: "2026-09-19",
+    time: "TBC",
+    title: "HQS Coffee Meet",
+    venue: "Details to be confirmed",
+    description: "A relaxed HQS coffee meet.",
+    cost: "FREE"
+  },
+  {
+    date: "2026-09-20",
+    time: "1:30pm",
+    title: "Pigeon Feeding Meet",
+    venue: "Greenhead Park · Meet at the Cafe in the Park",
+    description: "Pigeon Feeding Meets take place every Sunday at Greenhead Park.",
+    cost: "FREE"
+  },
+  {
+    date: "2026-09-25",
+    time: "6pm–9:30pm",
+    title: "SODA Fundraising Event",
+    venue: "Byram Cafe",
+    description: "A fundraising event supporting SODA.",
+    cost: "PAID · AMOUNT TO BE ADDED"
+  },
+  {
+    date: "2026-09-26",
+    time: "1pm",
+    title: "Sock Knitting Social",
+    venue: "Byram Cafe",
+    description: "You don't need to know how to knit socks to come along.",
+    cost: "FREE"
+  },
+  {
+    date: "2026-09-27",
+    time: "11am",
+    title: "Silent Book Club",
+    venue: "Hive Cafe",
+    description: "A relaxed silent reading session. Bring whatever you're currently reading and enjoy some quiet company.",
+    cost: "FREE"
+  },
+  {
+    date: "2026-09-27",
+    time: "1:30pm",
+    title: "Pigeon Feeding Meet",
+    venue: "Greenhead Park · Meet at the Cafe in the Park",
+    description: "Pigeon Feeding Meets take place every Sunday at Greenhead Park.",
+    cost: "FREE"
   }
+];
+
+
+// =========================
+// DATE HELPERS
+// =========================
+
+function getUpcomingEvents() {
+
+  const today = new Date();
+
+  today.setHours(0, 0, 0, 0);
+
+  return events
+    .filter(event => {
+
+      const eventDate = new Date(
+        event.date + "T23:59:59"
+      );
+
+      return eventDate >= today;
+
+    })
+    .sort((a, b) => {
+
+      return new Date(a.date) - new Date(b.date);
+
+    });
+
 }
 
-
-/* -----------------------------
-   HOMEPAGE EVENTS
------------------------------ */
-
-async function loadHomepageEvents() {
-
-  const container = document.getElementById("homepage-events");
-
-  if (!container) {
-    return;
-  }
-
-  const events = await loadEvents();
-
-  if (events.length === 0) {
-    container.innerHTML = `
-      <p>No upcoming events at the moment. Check back soon!</p>
-    `;
-    return;
-  }
-
-  // Homepage only shows the next 6
-  const homepageEvents = events.slice(0, 6);
-
-  container.innerHTML = homepageEvents.map(event => {
-
-    const date = formatDate(event.date);
-
-    return `
-      <article class="card">
-
-        <div class="date">
-          ${date} · ${event.time}
-        </div>
-
-        <h3>${event.title}</h3>
-
-        <p>
-          ${event.venue}
-        </p>
-
-        <span class="tag">
-          ${event.cost}
-        </span>
-
-      </article>
-    `;
-
-  }).join("");
-}
-
-
-/* -----------------------------
-   EVENTS PAGE
------------------------------ */
-
-async function loadEventsPage() {
-
-  const container = document.getElementById("events-page-list");
-
-  if (!container) {
-    return;
-  }
-
-  const events = await loadEvents();
-
-  if (events.length === 0) {
-    container.innerHTML = `
-      <p>No upcoming events at the moment. Check back soon!</p>
-    `;
-    return;
-  }
-
-  container.innerHTML = events.map(event => {
-
-    return `
-      <details class="event-item">
-
-        <summary>
-
-          <div class="event-date">
-            ${formatShortDate(event.date)}
-          </div>
-
-          <div class="event-main">
-
-            <h3>
-              ${event.title}
-            </h3>
-
-            <p>
-              ${event.venue}
-            </p>
-
-          </div>
-
-          <div class="event-meta">
-
-            <span>
-              ${event.time}
-            </span>
-
-            <span class="tag">
-              ${event.cost}
-            </span>
-
-          </div>
-
-        </summary>
-
-
-        <div class="event-details">
-
-          <p>
-            ${event.description}
-          </p>
-
-          <p>
-            <strong>Time:</strong> ${event.time}<br>
-            <strong>Venue:</strong> ${event.venue}<br>
-            <strong>Cost:</strong> ${event.cost}
-          </p>
-
-        </div>
-
-      </details>
-    `;
-
-  }).join("");
-}
-
-
-/* -----------------------------
-   DATE FORMATTING
------------------------------ */
 
 function formatDate(dateString) {
 
-  const date = new Date(dateString + "T12:00:00");
+  const date = new Date(
+    dateString + "T12:00:00"
+  );
 
-  return date.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long"
-  });
+  return date.toLocaleDateString(
+    "en-GB",
+    {
+      day: "numeric",
+      month: "long"
+    }
+  );
 
 }
 
 
 function formatShortDate(dateString) {
 
-  const date = new Date(dateString + "T12:00:00");
+  const date = new Date(
+    dateString + "T12:00:00"
+  );
 
-  return date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short"
-  }).toUpperCase();
+  return date.toLocaleDateString(
+    "en-GB",
+    {
+      day: "2-digit",
+      month: "short"
+    }
+  ).toUpperCase();
+
+}
+
+
+// =========================
+// HOMEPAGE
+// =========================
+
+function loadHomepageEvents() {
+
+  const container =
+    document.getElementById("homepage-events");
+
+  if (!container) return;
+
+
+  const upcomingEvents =
+    getUpcomingEvents();
+
+
+  if (upcomingEvents.length === 0) {
+
+    container.innerHTML = `
+      <p>
+        No upcoming events at the moment.
+        Check back soon!
+      </p>
+    `;
+
+    return;
+
+  }
+
+
+  /*
+    Homepage shows the first 6 events.
+    CSS controls how many are visible at once
+    on smaller screens.
+  */
+
+  const homepageEvents =
+    upcomingEvents.slice(0, 6);
+
+
+  container.innerHTML =
+    homepageEvents.map(event => {
+
+      return `
+
+        <article class="card">
+
+          <div class="date">
+            ${formatDate(event.date)} · ${event.time}
+          </div>
+
+          <h3>
+            ${event.title}
+          </h3>
+
+          <p>
+            ${event.venue}
+          </p>
+
+          <span class="tag">
+            ${event.cost}
+          </span>
+
+        </article>
+
+      `;
+
+    }).join("");
+
+}
+
+
+// =========================
+// EVENTS PAGE
+// =========================
+
+function loadEventsPage() {
+
+  const container =
+    document.getElementById("events-page-list");
+
+  if (!container) return;
+
+
+  const upcomingEvents =
+    getUpcomingEvents();
+
+
+  if (upcomingEvents.length === 0) {
+
+    container.innerHTML = `
+      <p>
+        No upcoming events at the moment.
+        Check back soon!
+      </p>
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    upcomingEvents.map(event => {
+
+      return `
+
+        <details class="event-item">
+
+          <summary>
+
+            <div class="event-date">
+              ${formatShortDate(event.date)}
+            </div>
+
+
+            <div class="event-main">
+
+              <h3>
+                ${event.title}
+              </h3>
+
+              <p>
+                ${event.venue}
+              </p>
+
+            </div>
+
+
+            <div class="event-meta">
+
+              <span>
+                ${event.time}
+              </span>
+
+              <span class="tag">
+                ${event.cost}
+              </span>
+
+            </div>
+
+          </summary>
+
+
+          <div class="event-details">
+
+            <p>
+              ${event.description}
+            </p>
+
+
+            <p>
+
+              <strong>Time:</strong>
+              ${event.time}
+
+              <br>
+
+              <strong>Venue:</strong>
+              ${event.venue}
+
+              <br>
+
+              <strong>Cost:</strong>
+              ${event.cost}
+
+            </p>
+
+          </div>
+
+        </details>
+
+      `;
+
+    }).join("");
 
 }
