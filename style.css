@@ -49,7 +49,7 @@ img {
 
 /* =========================
    HEADER
-========================= */
+   ========================= */
 
 header {
   padding: 28px 0 12px;
@@ -114,25 +114,36 @@ nav a[aria-current="page"] {
 
 
 /* =========================
-   MOBILE MENU BUTTON
-========================= */
+   HAMBURGER
+   ========================= */
 
 .menu-toggle {
   display: none;
+  align-items: center;
+  justify-content: center;
+
+  width: 48px;
+  height: 48px;
+
   background: var(--ink);
   color: white;
+
   border: 2px solid var(--ink);
-  padding: 8px 11px;
-  font-size: 1.35rem;
+
+  font-size: 1.6rem;
   line-height: 1;
+
   cursor: pointer;
-  box-shadow: 3px 4px 0 var(--accent);
+
+  box-shadow: 4px 4px 0 var(--accent);
+
+  z-index: 1001;
 }
 
 
 /* =========================
    HERO
-========================= */
+   ========================= */
 
 .hero {
   min-height: 610px;
@@ -231,7 +242,7 @@ nav a[aria-current="page"] {
 
 /* =========================
    SECTIONS
-========================= */
+   ========================= */
 
 .section {
   padding: 72px 0;
@@ -262,40 +273,14 @@ nav a[aria-current="page"] {
 
 
 /* =========================
-   HOMEPAGE EVENTS
-========================= */
+   EVENT CARDS
+   ========================= */
 
 .events {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 22px;
 }
-
-/*
-  On the homepage the event container can hold
-  up to six cards. On smaller screens it becomes
-  horizontally scrollable.
-*/
-
-#homepage-events {
-  overflow-x: auto;
-  grid-auto-flow: column;
-  grid-auto-columns: calc((100% - 44px) / 3);
-  grid-template-columns: none;
-  padding: 5px 5px 14px 2px;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
-}
-
-#homepage-events .card {
-  scroll-snap-align: start;
-  min-width: 0;
-}
-
-
-/* =========================
-   STANDARD CARDS
-========================= */
 
 .card {
   background: var(--white);
@@ -342,39 +327,41 @@ nav a[aria-current="page"] {
 
 
 /* =========================
-   FULL EVENTS PAGE
-========================= */
+   EVENTS PAGE
+   ========================= */
 
 .event-week {
-  margin-top: 50px;
+  margin: 50px 0;
 }
 
 .event-week-title {
   font-family: "Permanent Marker", cursive;
-  font-size: 2rem;
-  margin: 0 0 15px;
+  font-size: 2.5rem;
+  margin: 0 0 18px;
 }
 
 .event-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .event-item {
   background: var(--white);
   border: 2px solid var(--ink);
-  box-shadow: 3px 4px 0 var(--paper-dark);
+  box-shadow: 4px 5px 0 var(--paper-dark);
 }
 
 .event-item summary {
-  display: grid;
-  grid-template-columns: 80px 1fr auto;
-  align-items: center;
-  gap: 18px;
-  padding: 14px 17px;
-  cursor: pointer;
   list-style: none;
+  cursor: pointer;
+
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  align-items: center;
+
+  gap: 20px;
+  padding: 18px 20px;
 }
 
 .event-item summary::-webkit-details-marker {
@@ -383,9 +370,8 @@ nav a[aria-current="page"] {
 
 .event-item summary::after {
   content: "+";
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 700;
-  margin-left: 8px;
 }
 
 .event-item[open] summary::after {
@@ -394,26 +380,24 @@ nav a[aria-current="page"] {
 
 .event-date {
   font-weight: 800;
-  font-size: .85rem;
-  letter-spacing: .08em;
+  text-transform: uppercase;
+  letter-spacing: .06em;
 }
 
 .event-main h3 {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
 }
 
 .event-main p {
-  margin: 2px 0 0;
+  margin: 3px 0 0;
   color: var(--muted);
-  font-size: .9rem;
 }
 
 .event-meta {
   display: flex;
   align-items: center;
   gap: 10px;
-  justify-content: flex-end;
   white-space: nowrap;
 }
 
@@ -423,8 +407,8 @@ nav a[aria-current="page"] {
 
 .event-details {
   border-top: 2px solid var(--ink);
-  padding: 17px 20px 20px;
-  background: #faf7ef;
+  padding: 18px 20px 22px;
+  background: var(--paper);
 }
 
 .event-details p {
@@ -437,18 +421,8 @@ nav a[aria-current="page"] {
 
 
 /* =========================
-   MISSING LINK MARKERS
-========================= */
-
-.link-needed {
-  color: var(--accent);
-  font-weight: 800;
-}
-
-
-/* =========================
    ABOUT
-========================= */
+   ========================= */
 
 .about-grid {
   display: grid;
@@ -481,7 +455,7 @@ nav a[aria-current="page"] {
 
 /* =========================
    RESOURCES
-========================= */
+   ========================= */
 
 .resources {
   display: grid;
@@ -502,7 +476,7 @@ nav a[aria-current="page"] {
 
 /* =========================
    FOOTER
-========================= */
+   ========================= */
 
 footer {
   border-top: 2px solid var(--ink);
@@ -522,10 +496,15 @@ footer a {
   text-underline-offset: 3px;
 }
 
+.link-needed {
+  color: var(--accent);
+  font-weight: 700;
+}
+
 
 /* =========================
    GENERAL PAGES
-========================= */
+   ========================= */
 
 .page {
   padding: 60px 0 90px;
@@ -540,7 +519,7 @@ footer a {
 
 /* =========================
    NEWSLETTER
-========================= */
+   ========================= */
 
 .newsletter-preview {
   background: #ddd7cb;
@@ -558,8 +537,8 @@ footer a {
 
 
 /* =========================
-   NOTICES
-========================= */
+   NOTICE
+   ========================= */
 
 .notice {
   background: var(--yellow);
@@ -571,43 +550,88 @@ footer a {
 
 
 /* =========================
-   TABLET
-========================= */
+   MOBILE
+   ========================= */
 
 @media (max-width: 800px) {
 
   .topline {
     align-items: center;
+    position: relative;
   }
 
-  /*
-    Mobile menu button is shown.
-    Navigation starts hidden.
-  */
+
+  /* Show hamburger */
 
   .menu-toggle {
-    display: block;
-    margin-left: auto;
-  }
-
-  nav {
-    display: none;
-    width: 100%;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0;
-    border-top: 2px solid var(--ink);
-    padding-top: 8px;
-  }
-
-  nav.menu-open {
     display: flex;
   }
 
-  nav a {
-    padding: 12px 8px;
-    border-bottom: 1px solid var(--paper-dark);
+
+  /* Full-screen drawer */
+
+  nav {
+    position: fixed;
+
+    top: 0;
+    right: 0;
+
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+
+    background: var(--paper);
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 80px 30px 40px;
+
+    z-index: 1000;
+
+    transform: translateX(100%);
+
+    transition: transform .3s ease;
+
+    overflow-y: auto;
   }
+
+
+  nav.menu-open {
+    transform: translateX(0);
+  }
+
+
+  nav a {
+    font-family: "Permanent Marker", cursive;
+
+    font-size: 2rem;
+
+    padding: 8px 15px;
+
+    border-bottom: 2px solid transparent;
+
+    text-decoration: none;
+  }
+
+
+  nav a:hover,
+  nav a[aria-current="page"] {
+    border-bottom-color: var(--ink);
+  }
+
+
+  /* Stop background scrolling while menu is open */
+
+  body:has(nav.menu-open) {
+    overflow: hidden;
+  }
+
 
   .hero {
     grid-template-columns: 1fr;
@@ -615,44 +639,45 @@ footer a {
     padding-top: 35px;
   }
 
+
   .hero h1 {
     font-size: clamp(3.6rem, 18vw, 6rem);
   }
 
-  /*
-    Homepage:
-    3 cards fit across on larger screens,
-    then become a swipeable strip on mobile.
-  */
 
-  #homepage-events {
-    grid-auto-columns: 75%;
+  .events {
+    grid-template-columns: 1fr;
   }
+
 
   .about-grid {
     grid-template-columns: 1fr;
   }
 
+
   .resources {
     grid-template-columns: 1fr;
   }
 
-  /*
-    Full events page becomes compact
-    single-column rows.
-  */
 
   .event-item summary {
-    grid-template-columns: 65px 1fr auto;
+    grid-template-columns: 70px 1fr auto;
     gap: 12px;
+  }
+
+
+  .event-meta {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
   }
 
 }
 
 
 /* =========================
-   PHONE
-========================= */
+   SMALL PHONES
+   ========================= */
 
 @media (max-width: 500px) {
 
@@ -660,88 +685,68 @@ footer a {
     width: min(100% - 20px, 1120px);
   }
 
-  header {
-    padding-top: 18px;
-  }
 
   .brand {
     gap: 10px;
   }
+
 
   .brand img {
     width: 55px;
     height: 55px;
   }
 
+
   .brand-title {
     font-size: 1.65rem;
   }
 
+
   .brand-sub {
     font-size: .58rem;
   }
+
+
+  .menu-toggle {
+    width: 44px;
+    height: 44px;
+  }
+
+
+  nav a {
+    font-size: 2rem;
+  }
+
 
   .hero {
     padding-left: 5px;
     padding-right: 5px;
   }
 
+
   .section {
     padding: 50px 0;
   }
 
-  .section-heading {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  /*
-    On small phones, one event is mostly visible
-    at a time and can be swiped horizontally.
-  */
-
-  #homepage-events {
-    grid-auto-columns: 88%;
-    gap: 15px;
-  }
-
-  .card {
-    padding: 18px;
-  }
-
-  /*
-    Compact event list on phones.
-  */
 
   .event-item summary {
-    grid-template-columns: 55px 1fr;
-    gap: 10px;
-    padding: 13px;
+    grid-template-columns: 1fr auto;
   }
+
+
+  .event-date {
+    grid-column: 1 / -1;
+  }
+
+
+  .event-main {
+    grid-column: 1;
+  }
+
 
   .event-meta {
     grid-column: 2;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    white-space: normal;
-  }
-
-  .event-item summary::after {
-    position: absolute;
-    right: 12px;
-    top: 13px;
-  }
-
-  .event-item {
-    position: relative;
-  }
-
-  .event-details {
-    padding: 15px;
-  }
-
-  footer {
-    flex-direction: column;
+    grid-row: 2;
   }
 
 }
