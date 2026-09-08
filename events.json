@@ -1,100 +1,98 @@
-{
-  "events": [
-    {
-      "date": "2026-09-12",
-      "time": "Noon",
-      "title": "Protect for No Leeds Data Centre",
-      "venue": "Millennium Square, Leeds",
-      "description": "Meet at Millennium Square, Leeds.",
-      "cost": "FREE"
-    },
-    {
-      "date": "2026-09-13",
-      "time": "11am",
-      "title": "Silent Book Club",
-      "venue": "Hive Cafe",
-      "description": "A relaxed silent reading session.",
-      "cost": "FREE"
-    },
-    {
-      "date": "2026-09-13",
-      "time": "10:30am–1pm",
-      "title": "Lino and Tie Dye",
-      "venue": "Thread Republic",
-      "description": "A creative lino and tie dye session.",
-      "cost": "PAID · AMOUNT TO BE ADDED"
-    },
-    {
-      "date": "2026-09-13",
-      "time": "1:30pm",
-      "title": "Pigeon Feeding Meet",
-      "venue": "Greenhead Park",
-      "description": "Meet at the Cafe in the Park. Pigeon Feeding Meets take place every Sunday.",
-      "cost": "FREE"
-    },
-    {
-      "date": "2026-09-15",
-      "time": "6pm",
-      "title": "Sew Queer",
-      "venue": "Hive Cafe",
-      "description": "A relaxed sewing session and chance to get creative with others.",
-      "cost": "£2"
-    },
-    {
-      "date": "2026-09-19",
-      "time": "TBC",
-      "title": "Knitting Pub & Cafe Crawl",
-      "venue": "TBC",
-      "description": "A knitting-themed pub and cafe crawl.",
-      "cost": "FREE"
-    },
-    {
-      "date": "2026-09-19",
-      "time": "TBC",
-      "title": "HQS Coffee Meet",
-      "venue": "TBC",
-      "description": "A relaxed HQS coffee meet.",
-      "cost": "FREE"
-    },
-    {
-      "date": "2026-09-20",
-      "time": "1:30pm",
-      "title": "Pigeon Feeding Meet",
-      "venue": "Greenhead Park",
-      "description": "Meet at the Cafe in the Park. Pigeon Feeding Meets take place every Sunday.",
-      "cost": "FREE"
-    },
-    {
-      "date": "2026-09-25",
-      "time": "6pm–9:30pm",
-      "title": "SODA Fundraising Event",
-      "venue": "Byram Cafe",
-      "description": "A fundraising event supporting SODA.",
-      "cost": "PAID · AMOUNT TO BE ADDED"
-    },
-    {
-      "date": "2026-09-26",
-      "time": "1pm",
-      "title": "Sock Knitting Social",
-      "venue": "Byram Cafe",
-      "description": "You don't need to know how to knit socks to come along.",
-      "cost": "FREE"
-    },
-    {
-      "date": "2026-09-27",
-      "time": "11am",
-      "title": "Silent Book Club",
-      "venue": "Hive Cafe",
-      "description": "A relaxed silent reading session.",
-      "cost": "FREE"
-    },
-    {
-      "date": "2026-09-27",
-      "time": "1:30pm",
-      "title": "Pigeon Feeding Meet",
-      "venue": "Greenhead Park",
-      "description": "Meet at the Cafe in the Park. Pigeon Feeding Meets take place every Sunday.",
-      "cost": "FREE"
-    }
-  ]
-}
+[
+  {
+    "date": "2026-09-12",
+    "time": "Noon",
+    "title": "Protect for No Leeds Data Centre",
+    "venue": "Millennium Square, Leeds",
+    "description": "Join the Protect for No Leeds Data Centre action in Leeds.",
+    "cost": "FREE"
+  },
+  {
+    "date": "2026-09-13",
+    "time": "11am",
+    "title": "Silent Book Club",
+    "venue": "Hive Cafe",
+    "description": "A relaxed silent reading session. Bring whatever you're currently reading and enjoy some quiet company.",
+    "cost": "FREE"
+  },
+  {
+    "date": "2026-09-13",
+    "time": "10:30am–1pm",
+    "title": "Lino and Tie Dye",
+    "venue": "Thread Republic",
+    "description": "A creative lino and tie dye session at Thread Republic.",
+    "cost": "PAID · AMOUNT TO BE ADDED"
+  },
+  {
+    "date": "2026-09-13",
+    "time": "1:30pm",
+    "title": "Pigeon Feeding Meet",
+    "venue": "Greenhead Park · Meet at the Cafe in the Park",
+    "description": "Pigeon Feeding Meets take place every Sunday at Greenhead Park.",
+    "cost": "FREE"
+  },
+  {
+    "date": "2026-09-15",
+    "time": "6pm",
+    "title": "Sew Queer",
+    "venue": "Hive Cafe",
+    "description": "A relaxed sewing session and chance to get creative with others.",
+    "cost": "£2"
+  },
+  {
+    "date": "2026-09-19",
+    "time": "TBC",
+    "title": "Knitting Pub & Cafe Crawl",
+    "venue": "Details to be confirmed",
+    "description": "A knitting-themed pub and cafe crawl.",
+    "cost": "FREE"
+  },
+  {
+    "date": "2026-09-19",
+    "time": "TBC",
+    "title": "HQS Coffee Meet",
+    "venue": "Details to be confirmed",
+    "description": "A relaxed HQS coffee meet.",
+    "cost": "FREE"
+  },
+  {
+    "date": "2026-09-20",
+    "time": "1:30pm",
+    "title": "Pigeon Feeding Meet",
+    "venue": "Greenhead Park · Meet at the Cafe in the Park",
+    "description": "Pigeon Feeding Meets take place every Sunday at Greenhead Park.",
+    "cost": "FREE"
+  },
+  {
+    "date": "2026-09-25",
+    "time": "6pm–9:30pm",
+    "title": "SODA Fundraising Event",
+    "venue": "Byram Cafe",
+    "description": "A fundraising event supporting SODA.",
+    "cost": "PAID · AMOUNT TO BE ADDED"
+  },
+  {
+    "date": "2026-09-26",
+    "time": "1pm",
+    "title": "Sock Knitting Social",
+    "venue": "Byram Cafe",
+    "description": "You don't need to know how to knit socks to come along.",
+    "cost": "FREE"
+  },
+  {
+    "date": "2026-09-27",
+    "time": "11am",
+    "title": "Silent Book Club",
+    "venue": "Hive Cafe",
+    "description": "A relaxed silent reading session. Bring whatever you're currently reading and enjoy some quiet company.",
+    "cost": "FREE"
+  },
+  {
+    "date": "2026-09-27",
+    "time": "1:30pm",
+    "title": "Pigeon Feeding Meet",
+    "venue": "Greenhead Park · Meet at the Cafe in the Park",
+    "description": "Pigeon Feeding Meets take place every Sunday at Greenhead Park.",
+    "cost": "FREE"
+  }
+]
