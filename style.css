@@ -273,14 +273,40 @@ nav a[aria-current="page"] {
 
 
 /* =========================
-   EVENT CARDS
+   HOMEPAGE EVENT CAROUSEL
    ========================= */
 
 .events {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   gap: 22px;
+
+  overflow-x: auto;
+  overflow-y: visible;
+
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+
+  padding: 5px 5px 15px;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none;
 }
+
+.events::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* Three cards visible at once */
+
+.events .card {
+  flex: 0 0 calc((100% - 44px) / 3);
+  scroll-snap-align: start;
+}
+
+
+/* Keep the cards looking slightly handmade */
 
 .card {
   background: var(--white);
@@ -288,13 +314,22 @@ nav a[aria-current="page"] {
   padding: 23px;
   box-shadow: 5px 6px 0 var(--paper-dark);
   position: relative;
+  min-width: 0;
 }
 
-.card:nth-child(2) {
+.events .card:nth-child(2) {
   transform: rotate(-1deg);
 }
 
-.card:nth-child(3) {
+.events .card:nth-child(3) {
+  transform: rotate(1deg);
+}
+
+.events .card:nth-child(5) {
+  transform: rotate(-1deg);
+}
+
+.events .card:nth-child(6) {
   transform: rotate(1deg);
 }
 
@@ -358,6 +393,7 @@ nav a[aria-current="page"] {
 
   display: grid;
   grid-template-columns: 90px 1fr auto;
+
   align-items: center;
 
   gap: 20px;
@@ -645,8 +681,10 @@ footer a {
   }
 
 
-  .events {
-    grid-template-columns: 1fr;
+  /* One homepage event card visible at a time on mobile */
+
+  .events .card {
+    flex: 0 0 85%;
   }
 
 
