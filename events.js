@@ -1,101 +1,58 @@
-const events = [
-  {
-    date: "2026-09-12",
-    time: "Noon",
-    title: "Protect for No Leeds Data Centre",
-    venue: "Millennium Square, Leeds",
-    description: "Join the Protect for No Leeds Data Centre action in Leeds.",
-    cost: "FREE"
-  },
-  {
-    date: "2026-09-13",
-    time: "11am",
-    title: "Silent Book Club",
-    venue: "Hive Cafe",
-    description: "A relaxed silent reading session. Bring whatever you're currently reading and enjoy some quiet company.",
-    cost: "FREE"
-  },
-  {
-    date: "2026-09-13",
-    time: "10:30am–1pm",
-    title: "Lino and Tie Dye",
-    venue: "Thread Republic",
-    description: "A creative lino and tie dye session at Thread Republic.",
-    cost: "PAID · AMOUNT TO BE ADDED"
-  },
-  {
-    date: "2026-09-13",
-    time: "1:30pm",
-    title: "Pigeon Feeding Meet",
-    venue: "Greenhead Park · Meet at the Cafe in the Park",
-    description: "Pigeon Feeding Meets take place every Sunday at Greenhead Park.",
-    cost: "FREE"
-  },
-  {
-    date: "2026-09-15",
-    time: "6pm",
-    title: "Sew Queer",
-    venue: "Hive Cafe",
-    description: "A relaxed sewing session and chance to get creative with others.",
-    cost: "£2"
-  },
-  {
-    date: "2026-09-19",
-    time: "TBC",
-    title: "Knitting Pub & Cafe Crawl",
-    venue: "Details to be confirmed",
-    description: "A knitting-themed pub and cafe crawl.",
-    cost: "FREE"
-  },
-  {
-    date: "2026-09-19",
-    time: "TBC",
-    title: "HQS Coffee Meet",
-    venue: "Details to be confirmed",
-    description: "A relaxed HQS coffee meet.",
-    cost: "FREE"
-  },
-  {
-    date: "2026-09-20",
-    time: "1:30pm",
-    title: "Pigeon Feeding Meet",
-    venue: "Greenhead Park · Meet at the Cafe in the Park",
-    description: "Pigeon Feeding Meets take place every Sunday at Greenhead Park.",
-    cost: "FREE"
-  },
-  {
-    date: "2026-09-25",
-    time: "6pm–9:30pm",
-    title: "SODA Fundraising Event",
-    venue: "Byram Cafe",
-    description: "A fundraising event supporting SODA.",
-    cost: "PAID · AMOUNT TO BE ADDED"
-  },
-  {
-    date: "2026-09-26",
-    time: "1pm",
-    title: "Sock Knitting Social",
-    venue: "Byram Cafe",
-    description: "You don't need to know how to knit socks to come along.",
-    cost: "FREE"
-  },
-  {
-    date: "2026-09-27",
-    time: "11am",
-    title: "Silent Book Club",
-    venue: "Hive Cafe",
-    description: "A relaxed silent reading session. Bring whatever you're currently reading and enjoy some quiet company.",
-    cost: "FREE"
-  },
-  {
-    date: "2026-09-27",
-    time: "1:30pm",
-    title: "Pigeon Feeding Meet",
-    venue: "Greenhead Park · Meet at the Cafe in the Park",
-    description: "Pigeon Feeding Meets take place every Sunday at Greenhead Park.",
-    cost: "FREE"
+// =========================
+// EVENTS
+// =========================
+
+let events = [];
+
+
+// =========================
+// LOAD EVENTS.JSON
+// =========================
+
+async function loadEvents() {
+
+  try {
+
+    const response = await fetch("events.json");
+
+    if (!response.ok) {
+      throw new Error("Could not load events.json");
+    }
+
+    events = await response.json();
+
+    loadHomepageEvents();
+    loadEventsPage();
+
+  } catch (error) {
+
+    console.error("Events error:", error);
+
+    const homepage =
+      document.getElementById("homepage-events");
+
+    const eventsPage =
+      document.getElementById("events-page-list");
+
+    if (homepage) {
+      homepage.innerHTML = `
+        <p>
+          Events could not be loaded right now.
+        </p>
+      `;
+    }
+
+    if (eventsPage) {
+      eventsPage.innerHTML = `
+        <p>
+          Events could not be loaded right now.
+        </p>
+      `;
+    }
+
   }
-];
+
+}
 
 
 // =========================
@@ -111,9 +68,8 @@ function getUpcomingEvents() {
   return events
     .filter(event => {
 
-      const eventDate = new Date(
-        event.date + "T23:59:59"
-      );
+      const eventDate =
+        new Date(event.date + "T23:59:59");
 
       return eventDate >= today;
 
@@ -129,9 +85,8 @@ function getUpcomingEvents() {
 
 function formatDate(dateString) {
 
-  const date = new Date(
-    dateString + "T12:00:00"
-  );
+  const date =
+    new Date(dateString + "T12:00:00");
 
   return date.toLocaleDateString(
     "en-GB",
@@ -146,9 +101,8 @@ function formatDate(dateString) {
 
 function formatShortDate(dateString) {
 
-  const date = new Date(
-    dateString + "T12:00:00"
-  );
+  const date =
+    new Date(dateString + "T12:00:00");
 
   return date.toLocaleDateString(
     "en-GB",
@@ -190,12 +144,6 @@ function loadHomepageEvents() {
 
   }
 
-
-  /*
-    Homepage shows the first 6 events.
-    CSS controls how many are visible at once
-    on smaller screens.
-  */
 
   const homepageEvents =
     upcomingEvents.slice(0, 6);
@@ -276,7 +224,6 @@ function loadEventsPage() {
               ${formatShortDate(event.date)}
             </div>
 
-
             <div class="event-main">
 
               <h3>
@@ -288,7 +235,6 @@ function loadEventsPage() {
               </p>
 
             </div>
-
 
             <div class="event-meta">
 
@@ -310,7 +256,6 @@ function loadEventsPage() {
             <p>
               ${event.description}
             </p>
-
 
             <p>
 
@@ -338,3 +283,10 @@ function loadEventsPage() {
     }).join("");
 
 }
+
+
+// =========================
+// START
+// =========================
+
+loadEvents();
