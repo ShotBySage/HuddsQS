@@ -3,44 +3,360 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Newsletter | Hudds Queer Social</title>
-<meta name="description" content="Hudds Queer Social — inclusive community, events and resources for LGBTQIA+ people and allies in Huddersfield.">
+
+<meta
+  name="description"
+  content="Read the latest Hudds Queer Social newsletters and browse previous issues."
+>
+
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+
 <div class="site">
-<header>
-  <div class="topline">
-    <a class="brand" href="index.html">
-      <img src="assets/hqs-logo.jpg" alt="Hudds Queer Social logo">
-      <div><div class="brand-title">Hudds Queer Social</div><div class="brand-sub">Huddersfield · LGBTQIA+ Community</div></div>
-    </a>
-    <nav aria-label="Main navigation"><a href="index.html" >Home</a>
-<a href="about.html" >About</a>
-<a href="events.html" >Events</a>
-<a href="community.html" >Community</a>
-<a href="newsletter.html" aria-current="page">Newsletter</a>
-<a href="contact.html" >Contact</a></nav>
-  </div>
-</header>
 
-<main class="page">
-  <div class="kicker">Monthly newsletter</div>
-  <h1 class="page-title under">Newsletter</h1>
-  <p class="page-intro">The website version of the HQS newsletter. The first issue below is the September 2026 design supplied for the site build.</p>
-  <div class="newsletter-preview">
-    <img src="assets/newsletter-september-2026.jpg" alt="Hudds Queer Social September 2026 newsletter">
-  </div>
-  <div class="notice"><strong>Next issue:</strong> Add the next newsletter image here when it is ready. This section can later be converted into individual HTML newsletter pages so the text is searchable and accessible.</div>
-</main>
+  <!-- HEADER -->
 
-<footer>
-  <div><strong>Hudds Queer Social</strong><br>Creating space for our community.</div>
-  <div>
-    <a href="#">Instagram</a> · <a href="#">Facebook</a> · <a href="#">Community group</a><br>
-    <small>© 2026 Hudds Queer Social</small>
-  </div>
-</footer>
+  <header>
+
+    <div class="topline">
+
+      <a class="brand" href="index.html">
+
+        <img
+          src="assets/hqs-logo.jpg"
+          alt="Hudds Queer Social logo"
+        >
+
+        <div>
+          <div class="brand-title">
+            Hudds Queer Social
+          </div>
+
+          <div class="brand-sub">
+            Huddersfield · LGBTQIA+ Community
+          </div>
+        </div>
+
+      </a>
+
+
+      <!-- MOBILE MENU BUTTON -->
+
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+        aria-controls="main-navigation"
+        onclick="toggleMenu()"
+      >
+        ☰
+      </button>
+
+
+      <!-- NAVIGATION -->
+
+      <nav
+        id="main-navigation"
+        aria-label="Main navigation"
+      >
+
+        <a href="index.html">
+          Home
+        </a>
+
+        <a href="about.html">
+          About
+        </a>
+
+        <a href="events.html">
+          Events
+        </a>
+
+        <a href="community.html">
+          Community
+        </a>
+
+        <a
+          href="newsletter.html"
+          aria-current="page"
+        >
+          Newsletter
+        </a>
+
+        <a href="contact.html">
+          Contact
+        </a>
+
+      </nav>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN -->
+
+  <main class="page">
+
+    <div class="kicker">
+      Monthly newsletter
+    </div>
+
+
+    <h1 class="page-title under">
+      Newsletter
+    </h1>
+
+
+    <p class="page-intro">
+      Keep up with what's happening in the Hudds Queer Social community.
+      Our newsletters contain community news, upcoming events and
+      useful information.
+    </p>
+
+
+    <!-- CURRENT NEWSLETTER -->
+
+    <section class="newsletter-list">
+
+      <div class="newsletter-item">
+
+        <div class="newsletter-number">
+          CURRENT
+        </div>
+
+        <div class="newsletter-info">
+
+          <h2>
+            September 2026
+          </h2>
+
+          <p>
+            The latest Hudds Queer Social newsletter.
+          </p>
+
+        </div>
+
+        <a
+          class="btn"
+          href="newsletter/current.pdf"
+          target="_blank"
+          rel="noopener"
+        >
+          Read newsletter →
+        </a>
+
+      </div>
+
+
+      <!-- PREVIOUS NEWSLETTERS -->
+
+      <div class="newsletter-item">
+
+        <div class="newsletter-number">
+          1
+        </div>
+
+        <div class="newsletter-info">
+
+          <h2>
+            <!-- ADD MONTH / YEAR HERE -->
+          </h2>
+
+          <p>
+            Previous newsletter.
+          </p>
+
+        </div>
+
+        <a
+          class="btn secondary"
+          href="newsletter/1.pdf"
+          target="_blank"
+          rel="noopener"
+        >
+          Read newsletter →
+        </a>
+
+      </div>
+
+
+      <div class="newsletter-item">
+
+        <div class="newsletter-number">
+          2
+        </div>
+
+        <div class="newsletter-info">
+
+          <h2>
+            <!-- ADD MONTH / YEAR HERE -->
+          </h2>
+
+          <p>
+            Previous newsletter.
+          </p>
+
+        </div>
+
+        <a
+          class="btn secondary"
+          href="newsletter/2.pdf"
+          target="_blank"
+          rel="noopener"
+        >
+          Read newsletter →
+        </a>
+
+      </div>
+
+
+      <div class="newsletter-item">
+
+        <div class="newsletter-number">
+          3
+        </div>
+
+        <div class="newsletter-info">
+
+          <h2>
+            <!-- ADD MONTH / YEAR HERE -->
+          </h2>
+
+          <p>
+            Previous newsletter.
+          </p>
+
+        </div>
+
+        <a
+          class="btn secondary"
+          href="newsletter/3.pdf"
+          target="_blank"
+          rel="noopener"
+        >
+          Read newsletter →
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- FOLDER INFORMATION -->
+
+    <div class="notice">
+
+      <strong>Newsletter archive</strong><br>
+
+      All newsletter PDFs are stored in the
+      <strong>newsletter</strong> folder.
+
+      The latest issue is always named
+      <strong>current.pdf</strong>.
+
+      Previous issues are numbered
+      <strong>1.pdf, 2.pdf, 3.pdf</strong>
+      and so on.
+
+      <br><br>
+
+      When a new newsletter is published, simply replace
+      <strong>current.pdf</strong> with the new issue and move the
+      previous issue into the next numbered file.
+
+    </div>
+
+  </main>
+
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    <div>
+
+      <strong>
+        Hudds Queer Social
+      </strong>
+
+      <br>
+
+      Creating space for our community.
+
+    </div>
+
+
+    <div>
+
+      <a
+        href="https://www.instagram.com/huddsqueersocial?stkn=bHljdDIxYmRwODU="
+        target="_blank"
+        rel="noopener"
+      >
+        Instagram
+      </a>
+
+      ·
+
+      <span class="link-needed">
+        Facebook — LINK NEEDED
+      </span>
+
+      ·
+
+      <span class="link-needed">
+        Join the community — FORM NEEDED
+      </span>
+
+      <br>
+
+      <small>
+        © 2026 Hudds Queer Social
+      </small>
+
+    </div>
+
+  </footer>
+
 </div>
+
+
+<!-- MOBILE MENU -->
+
+<script>
+
+function toggleMenu() {
+
+  const nav =
+    document.getElementById("main-navigation");
+
+  const button =
+    document.querySelector(".menu-toggle");
+
+  const isOpen =
+    nav.classList.toggle("menu-open");
+
+  button.setAttribute(
+    "aria-expanded",
+    isOpen
+  );
+
+  button.setAttribute(
+    "aria-label",
+    isOpen
+      ? "Close navigation"
+      : "Open navigation"
+  );
+
+}
+
+</script>
+
 </body>
 </html>
