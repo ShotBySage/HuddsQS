@@ -557,18 +557,70 @@ footer a {
    NEWSLETTER
    ========================= */
 
-.newsletter-preview {
-  background: #ddd7cb;
-  padding: 25px;
-  border: 2px solid var(--ink);
-  box-shadow: var(--shadow);
-  transform: rotate(.5deg);
+.newsletter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 35px;
 }
 
-.newsletter-preview img {
-  margin: auto;
-  max-height: 1050px;
-  object-fit: contain;
+.newsletter-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 25px;
+
+  background: var(--white);
+  border: 2px solid var(--ink);
+  padding: 20px 22px;
+
+  box-shadow: 4px 5px 0 var(--paper-dark);
+
+  text-decoration: none;
+
+  transition:
+    transform .15s ease,
+    box-shadow .15s ease;
+}
+
+.newsletter-item:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 7px 0 var(--accent);
+}
+
+.newsletter-name {
+  font-family: "Permanent Marker", cursive;
+  font-size: 1.5rem;
+}
+
+.newsletter-file {
+  font-size: .75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--muted);
+}
+
+.newsletter-current {
+  border: 3px solid var(--accent);
+  box-shadow: 5px 6px 0 var(--ink);
+}
+
+.newsletter-current .newsletter-name::after {
+  content: " CURRENT";
+  display: inline-block;
+
+  margin-left: 10px;
+  padding: 4px 7px;
+
+  background: var(--accent);
+  color: white;
+
+  font-family: "DM Sans", Arial, sans-serif;
+  font-size: .65rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  vertical-align: middle;
 }
 
 
@@ -708,6 +760,18 @@ footer a {
     flex-direction: column;
     align-items: flex-end;
     gap: 5px;
+  }
+
+
+  /* Newsletter */
+
+  .newsletter-item {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .newsletter-file {
+    font-size: .7rem;
   }
 
 }
