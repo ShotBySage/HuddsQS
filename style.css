@@ -557,70 +557,133 @@ footer a {
    NEWSLETTER
    ========================= */
 
-.newsletter-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 35px;
+/*
+   The newsletter is NOT a card.
+
+   The PDF itself will sit directly on the page.
+   The controls below are designed for the PDF
+   page navigation we will add in newsletter.js.
+*/
+
+.newsletter-viewer {
+  width: 100%;
+  margin: 40px auto 0;
 }
 
-.newsletter-item {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 25px;
+.newsletter-pdf {
+  width: 100%;
+  display: block;
+
+  border: 2px solid var(--ink);
 
   background: var(--white);
+
+  box-shadow: var(--shadow);
+
+  min-height: 700px;
+}
+
+.newsletter-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+
+  margin: 25px 0 10px;
+}
+
+.newsletter-arrow {
+  width: 48px;
+  height: 48px;
+
   border: 2px solid var(--ink);
-  padding: 20px 22px;
 
-  box-shadow: 4px 5px 0 var(--paper-dark);
+  background: var(--ink);
+  color: white;
 
-  text-decoration: none;
-
-  transition:
-    transform .15s ease,
-    box-shadow .15s ease;
-}
-
-.newsletter-item:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 7px 0 var(--accent);
-}
-
-.newsletter-name {
-  font-family: "Permanent Marker", cursive;
   font-size: 1.5rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow: 4px 5px 0 var(--accent);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.newsletter-file {
-  font-size: .75rem;
+.newsletter-arrow:hover {
+  transform: translateY(-1px);
+}
+
+.newsletter-arrow:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 3px 0 var(--accent);
+}
+
+.newsletter-arrow:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.newsletter-page-number {
+  min-width: 100px;
+  text-align: center;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: .08em;
-  color: var(--muted);
+  font-size: .8rem;
 }
 
-.newsletter-current {
-  border: 3px solid var(--accent);
-  box-shadow: 5px 6px 0 var(--ink);
+.newsletter-archive {
+  margin-top: 70px;
+  border-top: 2px solid var(--ink);
+  padding-top: 35px;
 }
 
-.newsletter-current .newsletter-name::after {
-  content: " CURRENT";
-  display: inline-block;
+.newsletter-archive h2 {
+  font-family: "Permanent Marker", cursive;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin: 0 0 25px;
+}
 
-  margin-left: 10px;
-  padding: 4px 7px;
+.newsletter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-  background: var(--accent);
-  color: white;
+.newsletter-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
 
-  font-family: "DM Sans", Arial, sans-serif;
-  font-size: .65rem;
+  padding: 15px 18px;
+
+  border-top: 2px solid var(--ink);
+
+  text-decoration: none;
+}
+
+.newsletter-item:last-child {
+  border-bottom: 2px solid var(--ink);
+}
+
+.newsletter-item:hover {
+  background: var(--paper-dark);
+}
+
+.newsletter-item-title {
   font-weight: 800;
-  letter-spacing: .08em;
-  vertical-align: middle;
+  font-size: 1.05rem;
+}
+
+.newsletter-item-number {
+  font-family: "Permanent Marker", cursive;
+  font-size: 1.2rem;
 }
 
 
@@ -765,21 +828,29 @@ footer a {
 
   /* Newsletter */
 
-  .newsletter-item {
-    grid-template-columns: 1fr;
-    gap: 8px;
+  .newsletter-viewer {
+    margin-top: 30px;
   }
 
-  .newsletter-file {
-    font-size: .7rem;
+  .newsletter-pdf {
+    min-height: 500px;
+  }
+
+  .newsletter-controls {
+    gap: 12px;
+  }
+
+  .newsletter-arrow {
+    width: 46px;
+    height: 46px;
   }
 
 }
 
 
-/* =========================
-   SMALL PHONES
-   ========================= */
+ /* =========================
+    SMALL PHONES
+    ========================= */
 
 @media (max-width: 500px) {
 
@@ -849,6 +920,30 @@ footer a {
   .event-meta {
     grid-column: 2;
     grid-row: 2;
+  }
+
+
+  /* Newsletter */
+
+  .newsletter-pdf {
+    min-height: 450px;
+  }
+
+  .newsletter-controls {
+    margin-top: 20px;
+  }
+
+  .newsletter-page-number {
+    min-width: 80px;
+    font-size: .72rem;
+  }
+
+  .newsletter-archive {
+    margin-top: 50px;
+  }
+
+  .newsletter-item {
+    padding: 14px 10px;
   }
 
 }
