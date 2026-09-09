@@ -1,29 +1,33 @@
+<!doctype html>
 
+<html lang="en-GB">
 
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-
-
-
-
+<title>About | Hudds Queer Social</title>
 
 <meta
 name="description"
 content="Learn more about Hudds Queer Social, our community and the people behind it."
 
+>
 
+<link rel="stylesheet" href="style.css">
+</head>
 
+<body>
 
+<div class="site">
 
+<!-- HEADER -->
 
+<header>
 
+  <div class="topline">
 
-
-
-
-
-  
-
-
+```
 <a class="brand" href="index.html">
 
   <img
@@ -95,35 +99,37 @@ content="Learn more about Hudds Queer Social, our community and the people behin
   </a>
 
 </nav>
+```
 
+  </div>
 
-  
+</header>
 
+<!-- MAIN -->
 
+<main class="page">
 
+  <!-- INTRO -->
 
-  
-  
-
+  <div class="kicker">
     Who we are
-  
+  </div>
 
-  
-
+  <h1 class="page-title under">
     About HQS
-  
+  </h1>
 
-  
-
+  <p class="page-intro">
     Hudds Queer Social is a community built around one simple idea:
     making it easier for LGBTQIA+ people in Huddersfield to find
     their people.
-  
+  </p>
 
-  
-  
+  <!-- ABOUT HQS -->
 
+  <div class="about-grid">
 
+```
 <figure class="polaroid">
 
   <img
@@ -163,14 +169,15 @@ content="Learn more about Hudds Queer Social, our community and the people behin
   </p>
 
 </div>
+```
 
+  </div>
 
-  
+  <!-- WHAT WE DO -->
 
-  
-  
+  <section class="section">
 
-
+```
 <div class="kicker">
   More than events
 </div>
@@ -241,14 +248,15 @@ content="Learn more about Hudds Queer Social, our community and the people behin
 
 
 </div>
+```
 
+  </section>
 
-  
+  <!-- FOUNDER -->
 
-  
-  
+  <section class="founder-section">
 
-
+```
 <div class="kicker">
   How it all started
 </div>
@@ -262,7 +270,7 @@ content="Learn more about Hudds Queer Social, our community and the people behin
 <div class="founder-box">
 
 
-  <!-- FOUNDER PHOTO -->
+  <!-- KASEE'S PHOTO -->
 
   <div class="founder-photo">
 
@@ -274,7 +282,7 @@ content="Learn more about Hudds Queer Social, our community and the people behin
   </div>
 
 
-  <!-- FOUNDER WORDS -->
+  <!-- KASEE'S WORDS -->
 
   <div class="founder-words">
 
@@ -334,14 +342,15 @@ content="Learn more about Hudds Queer Social, our community and the people behin
 
 
 </div>
+```
 
+  </section>
 
-  
+  <!-- COMMUNITY NOTICE -->
 
-  
-  
+  <div class="notice">
 
-
+```
 <strong>
   Community first.
 </strong>
@@ -350,16 +359,19 @@ content="Learn more about Hudds Queer Social, our community and the people behin
 
 HQS is built by its community, and we're always looking for
 ways to make our events and spaces better for everyone.
+```
 
+  </div>
 
-  
+</main>
 
+<!-- FOOTER -->
 
+<footer>
 
+  <div>
 
-  
-
-
+```
 <strong>
   Hudds Queer Social
 </strong>
@@ -367,13 +379,13 @@ ways to make our events and spaces better for everyone.
 <br>
 
 Creating space for our community.
+```
 
+  </div>
 
-  
+  <div>
 
-  
-
-
+```
 <a
   href="https://www.instagram.com/huddsqueersocial?stkn=bHljdDIxYmRwODU="
   target="_blank"
@@ -399,7 +411,47 @@ Creating space for our community.
 <small>
   © 2026 Hudds Queer Social
 </small>
+```
+
+  </div>
+
+</footer>
+
+</div>
+
+<!-- MOBILE MENU SCRIPT -->
+
+<script>
+
+function toggleMenu() {
+
+  const nav =
+    document.getElementById("main-navigation");
+
+  const button =
+    document.querySelector(".menu-toggle");
 
 
-  
+  const isOpen =
+    nav.classList.toggle("menu-open");
 
+
+  button.setAttribute(
+    "aria-expanded",
+    isOpen
+  );
+
+
+  button.setAttribute(
+    "aria-label",
+    isOpen
+      ? "Close navigation"
+      : "Open navigation"
+  );
+
+}
+
+</script>
+
+</body>
+</html>
