@@ -12,9 +12,15 @@ export default {
         }
       );
 
-      if (!response.ok) {
-        return new Response(
-          JSON.stringify({ error: "Eventbrite request failed" }),
+    if (!response.ok) {
+  const errorText = await response.text();
+
+  return new Response(
+    JSON.stringify({
+      error: "Eventbrite request failed",
+      status: response.status,
+      details: errorText
+    }),
           {
             status: response.status,
             headers: {
