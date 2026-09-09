@@ -1086,5 +1086,202 @@ footer a {
 
 }
 
+  /* =========================
+   FOUNDER SECTION
+   ========================= */
+
+.founder-section {
+  margin-top: 80px;
+  padding-top: 55px;
+  border-top: 2px solid var(--ink);
+}
+
+.founder-box {
+  width: 100%;
+  margin-top: 25px;
+
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 30px;
+  align-items: start;
+
+  background: var(--blue);
+  color: var(--ink);
+
+  border: 2px solid var(--ink);
+  padding: 25px;
+
+  box-shadow: 7px 8px 0 var(--ink);
+
+  transform: rotate(-0.4deg);
+}
+
+
+/* Founder image */
+
+.founder-image {
+  width: 260px;
+  max-width: 260px;
+
+  margin: 0;
+
+  background: var(--white);
+  padding: 10px;
+
+  border: 0;
+
+  box-shadow: 4px 5px 0 rgba(17,17,17,.15);
+
+  transform: rotate(1.5deg);
+}
+
+.founder-image img {
+  display: block;
+
+  width: 100%;
+  height: 320px;
+
+  max-width: none;
+
+  object-fit: cover;
+}
+
+
+/* Founder text */
+
+.founder-content {
+  min-width: 0;
+}
+
+.founder-quote {
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.founder-quote p {
+  margin: 0 0 17px;
+}
+
+.founder-quote p:last-child {
+  margin-bottom: 25px;
+}
+
+
+/* Founder name */
+
+.founder-name {
+  border-top: 2px solid var(--ink);
+  padding-top: 15px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.founder-name strong {
+  font-family: "Permanent Marker", cursive;
+  font-size: 1.45rem;
+  line-height: 1.1;
+}
+
+.founder-name span {
+  font-size: .85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+
+/* =========================
+   COMMUNITY NOTE
+   ========================= */
+
+.community-note {
+  background: var(--yellow);
+  color: var(--ink);
+
+  border: 2px solid var(--ink);
+
+  padding: 22px 25px;
+  margin-top: 45px;
+
+  box-shadow: 5px 6px 0 var(--ink);
+
+  transform: rotate(.3deg);
+}
+
+.community-note strong {
+  font-size: 1.4rem;
+}
+
+.community-note p {
+  margin: 5px 0 0;
+}
+
+
+/* =========================
+   FOUNDER MOBILE
+   ========================= */
+
+@media (max-width: 800px) {
+
+  .founder-section {
+    margin-top: 60px;
+    padding-top: 45px;
+  }
+
+  .founder-box {
+    grid-template-columns: 1fr;
+    gap: 25px;
+
+    padding: 18px;
+
+    transform: none;
+  }
+
+  .founder-image {
+    width: 75%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .founder-image img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .founder-quote {
+    font-size: 1rem;
+  }
+
+}
+
+
+/* =========================
+   SMALL PHONES
+   ========================= */
+
+@media (max-width: 500px) {
+
+  .founder-box {
+    padding: 15px;
+  }
+
+  .founder-image {
+    width: 85%;
+    max-width: 280px;
+  }
+
+  .founder-quote {
+    font-size: .98rem;
+  }
+
+  .founder-name strong {
+    font-size: 1.25rem;
+  }
+
+}
   
 }
