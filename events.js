@@ -6,20 +6,80 @@ let events = [];
 
 
 // =========================
-// LOAD EVENTS.JSON
+// LOAD TICKET TAILOR EVENTS
 // =========================
 
 async function loadEvents() {
 
   try {
 
-    const response = await fetch("events.json");
+    const response =
+      await fetch("/api/events");
 
     if (!response.ok) {
-      throw new Error("Could not load events.json");
+      throw new Error("Could not load Ticket Tailor events");
     }
 
-    events = await response.json();
+    const data =
+      await response.json();
+
+
+    // Convert Ticket Tailor events into our website format
+
+    events =
+      (data.data || [])
+        .map(event => {
+
+          const start =
+            event.start?.datetime || event.start?.date;
+
+          if (!start) return null;
+
+          const date =
+            start.split("T")[0];
+
+          const time =
+            start.includes("T")
+              ? new Date(start).toLocaleTimeString(
+                  "en-GB",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                  }
+                )
+              : "";
+
+
+          return {
+
+            date: date,
+
+            time: time,
+
+            title:
+              event.name || "Untitled event",
+
+            venue:
+              event.venue?.name ||
+              "Location to be announced",
+
+            cost:
+              event.ticket_types?.length
+                ? "Tickets available"
+                : "See event details",
+
+            description:
+              event.description ||
+              "See the Ticket Tailor listing for more information.",
+
+            url:
+              event.url || "#"
+
+          };
+
+        })
+        .filter(Boolean);
+
 
     loadHomepageEvents();
     loadEventsPage();
@@ -34,20 +94,26 @@ async function loadEvents() {
     const eventsPage =
       document.getElementById("events-page-list");
 
+
     if (homepage) {
+
       homepage.innerHTML = `
         <p>
           Events could not be loaded right now.
         </p>
       `;
+
     }
 
+
     if (eventsPage) {
+
       eventsPage.innerHTML = `
         <p>
           Events could not be loaded right now.
         </p>
       `;
+
     }
 
   }
@@ -61,22 +127,36 @@ async function loadEvents() {
 
 function getUpcomingEvents() {
 
-  const today = new Date();
+  const today =
+    new Date();
 
-  today.setHours(0, 0, 0, 0);
+  today.setHours(
+    0,
+    0,
+    0,
+    0
+  );
+
 
   return events
+
     .filter(event => {
 
       const eventDate =
-        new Date(event.date + "T23:59:59");
+        new Date(
+          event.date + "T23:59:59"
+        );
 
       return eventDate >= today;
 
     })
+
     .sort((a, b) => {
 
-      return new Date(a.date) - new Date(b.date);
+      return (
+        new Date(a.date) -
+        new Date(b.date)
+      );
 
     });
 
@@ -86,7 +166,10 @@ function getUpcomingEvents() {
 function formatDate(dateString) {
 
   const date =
-    new Date(dateString + "T12:00:00");
+    new Date(
+      dateString + "T12:00:00"
+    );
+
 
   return date.toLocaleDateString(
     "en-GB",
@@ -102,7 +185,10 @@ function formatDate(dateString) {
 function formatShortDate(dateString) {
 
   const date =
-    new Date(dateString + "T12:00:00");
+    new Date(
+      dateString + "T12:00:00"
+    );
+
 
   return date.toLocaleDateString(
     "en-GB",
@@ -122,7 +208,9 @@ function formatShortDate(dateString) {
 function loadHomepageEvents() {
 
   const container =
-    document.getElementById("homepage-events");
+    document.getElementById(
+      "homepage-events"
+    );
 
   if (!container) return;
 
@@ -131,7 +219,9 @@ function loadHomepageEvents() {
     getUpcomingEvents();
 
 
-  if (upcomingEvents.length === 0) {
+  if (
+    upcomingEvents.length === 0
+  ) {
 
     container.innerHTML = `
       <p>
@@ -188,7 +278,9 @@ function loadHomepageEvents() {
 function loadEventsPage() {
 
   const container =
-    document.getElementById("events-page-list");
+    document.getElementById(
+      "events-page-list"
+    );
 
   if (!container) return;
 
@@ -197,7 +289,9 @@ function loadEventsPage() {
     getUpcomingEvents();
 
 
-  if (upcomingEvents.length === 0) {
+  if (
+    upcomingEvents.length === 0
+  ) {
 
     container.innerHTML = `
       <p>
@@ -273,6 +367,23 @@ function loadEventsPage() {
               ${event.cost}
 
             </p>
+
+
+            ${
+              event.url !== "#"
+                ? `
+                  <p>
+                    <a
+                      href="${event.url}"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      View tickets →
+                    </a>
+                  </p>
+                `
+                : ""
+            }
 
           </div>
 
