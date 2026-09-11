@@ -5,10 +5,5 @@
   "assets": {
     "directory": ".",
     "binding": "ASSETS"
-  },
-  "secrets": {
-    "required": [
-      "TICKETTAILOR_API_KEY"
-    ]
   }
 }
