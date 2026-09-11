@@ -3,7 +3,6 @@ export default {
 
     const url = new URL(request.url);
 
-
     // =========================
     // TEST TICKET TAILOR KEY
     // =========================
@@ -48,10 +47,8 @@ export default {
           }
         );
 
-
         const data =
           await response.json();
-
 
         return new Response(
           JSON.stringify(data),
