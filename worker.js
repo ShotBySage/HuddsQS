@@ -8,8 +8,8 @@ export default {
 
       try {
 
-        const credentials =
-          btoa(`${env.TICKETTAILOR_API_KEY}:`);
+       const credentials =
+  btoa(env.TICKETTAILOR_API_KEY);
 
         const response = await fetch(
           "https://api.tickettailor.com/v1/events?limit=100&status=published",
