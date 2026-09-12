@@ -54,6 +54,8 @@ async function loadEvents() {
 
     renderCalendar();
 
+    renderHomepageEvents();
+
   } catch (error) {
 
     console.error(
@@ -71,6 +73,12 @@ async function loadEvents() {
     const month =
       document.getElementById(
         "calendar-month"
+      );
+
+
+    const homepage =
+      document.getElementById(
+        "homepage-events"
       );
 
 
@@ -103,6 +111,19 @@ async function loadEvents() {
 
     }
 
+
+    if (homepage) {
+
+      homepage.innerHTML = `
+
+        <p>
+          Events could not be loaded right now.
+        </p>
+
+      `;
+
+    }
+
   }
 
 }
@@ -125,17 +146,9 @@ function convertEvent(event) {
   }
 
 
-  // =======================================================
-  // START DATE
-  // =======================================================
-
   const date =
     start.substring(0, 10);
 
-
-  // =======================================================
-  // START TIME
-  // =======================================================
 
   let time = "";
 
@@ -160,27 +173,15 @@ function convertEvent(event) {
   }
 
 
-  // =======================================================
-  // END TIME
-  // =======================================================
-
   const end =
     event.end?.iso ||
     event.end?.datetime ||
     null;
 
 
-  // Keep the complete ISO timestamp.
-  // This lets JavaScript compare the actual
-  // ending time against the current time.
-
   const endDateTime =
     end || null;
 
-
-  // =======================================================
-  // TICKET STATUS
-  // =======================================================
 
   const ticketTypes =
     event.ticket_types || [];
@@ -223,10 +224,6 @@ function convertEvent(event) {
 
   }
 
-
-  // =======================================================
-  // RETURN EVENT
-  // =======================================================
 
   return {
 
@@ -291,9 +288,6 @@ function convertEvent(event) {
 
 function hasEventEnded(event) {
 
-  // If Ticket Tailor gives us an end time,
-  // use that exact time.
-
   if (
     event.endDateTime
   ) {
@@ -308,12 +302,6 @@ function hasEventEnded(event) {
 
   }
 
-
-  // =======================================================
-  // FALLBACK
-  // =======================================================
-  // If there is no end datetime, treat the event as
-  // lasting until the end of its listed date.
 
   const fallbackEnd =
     new Date(
@@ -372,7 +360,7 @@ function formatTime(timeString) {
 
 
 // =========================================================
-// CLEAN TICKET TAILOR DESCRIPTION
+// CLEAN DESCRIPTION
 // =========================================================
 
 function cleanDescription(description) {
@@ -429,9 +417,6 @@ function getFirstDayOfMonth(
       1
     );
 
-
-  // JavaScript Sunday = 0
-  // Convert to Monday = 0
 
   return (
     date.getDay() + 6
@@ -528,6 +513,182 @@ function getActiveEvents() {
 
 
 // =========================================================
+// HOMEPAGE EVENTS
+// =========================================================
+
+function renderHomepageEvents() {
+
+  const container =
+    document.getElementById(
+      "homepage-events"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  const upcoming =
+    getActiveEvents()
+      .sort(
+        (a, b) =>
+          new Date(a.startDateTime) -
+          new Date(b.startDateTime)
+      )
+      .slice(0, 3);
+
+
+  if (upcoming.length === 0) {
+
+    container.innerHTML = `
+
+      <div class="homepage-empty">
+
+        <p>
+          No upcoming events right now.
+        </p>
+
+        <a href="events.html">
+          Check back soon →
+        </a>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  container.innerHTML = "";
+
+
+  upcoming.forEach(
+    event => {
+
+      const article =
+        document.createElement("article");
+
+
+      article.className =
+        "homepage-event";
+
+
+      article.innerHTML = `
+
+        <div class="homepage-event-date">
+
+          ${escapeHTML(
+            formatShortDate(event.date)
+          )}
+
+        </div>
+
+
+        <div class="homepage-event-content">
+
+          <div class="homepage-event-status ${event.statusClass}">
+            ${escapeHTML(event.cost)}
+          </div>
+
+
+          <h3>
+            ${escapeHTML(event.title)}
+          </h3>
+
+
+          <p class="homepage-event-meta">
+
+            ${escapeHTML(
+              event.time || "Time TBC"
+            )}
+
+            ·
+
+            ${escapeHTML(
+              event.venue
+            )}
+
+          </p>
+
+
+          <button
+            type="button"
+            class="homepage-event-link"
+          >
+            View event →
+          </button>
+
+        </div>
+
+      `;
+
+
+      const button =
+        article.querySelector(
+          ".homepage-event-link"
+        );
+
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          if (
+            event.url &&
+            event.url !== "#"
+          ) {
+
+            window.open(
+              event.url,
+              "_blank",
+              "noopener"
+            );
+
+          }
+
+        }
+      );
+
+
+      container.appendChild(
+        article
+      );
+
+    }
+  );
+
+}
+
+
+// =========================================================
+// SHORT DATE
+// =========================================================
+
+function formatShortDate(
+  dateString
+) {
+
+  const date =
+    new Date(
+      `${dateString}T12:00:00`
+    );
+
+
+  return date.toLocaleDateString(
+    "en-GB",
+    {
+      day: "numeric",
+      month: "short"
+    }
+  );
+
+}
+
+
+// =========================================================
 // RENDER CALENDAR
 // =========================================================
 
@@ -549,8 +710,6 @@ function renderCalendar() {
     return;
   }
 
-
-  // Remove events that have ended.
 
   events =
     events.filter(
@@ -583,10 +742,6 @@ function renderCalendar() {
     );
 
 
-  // =======================================================
-  // EMPTY DAYS BEFORE MONTH STARTS
-  // =======================================================
-
   for (
     let i = 0;
     i < firstDay;
@@ -607,10 +762,6 @@ function renderCalendar() {
 
   }
 
-
-  // =======================================================
-  // MONTH DAYS
-  // =======================================================
 
   for (
     let day = 1;
@@ -641,10 +792,6 @@ function renderCalendar() {
     }
 
 
-    // =====================================================
-    // DAY NUMBER
-    // =====================================================
-
     const number =
       document.createElement("div");
 
@@ -661,10 +808,6 @@ function renderCalendar() {
       number
     );
 
-
-    // =====================================================
-    // EVENTS
-    // =====================================================
 
     const eventContainer =
       document.createElement("div");
@@ -739,10 +882,6 @@ function renderCalendar() {
 
   }
 
-
-  // =======================================================
-  // FILL FINAL WEEK
-  // =======================================================
 
   const totalCells =
     firstDay + days;
@@ -820,8 +959,6 @@ function escapeHTML(value) {
 
 function openEvent(event) {
 
-  // Don't open events which have ended.
-
   if (
     hasEventEnded(event)
   ) {
@@ -881,27 +1018,15 @@ function openEvent(event) {
   }
 
 
-  // =======================================================
-  // DATE
-  // =======================================================
-
   date.textContent =
     formatLongDate(
       event.date
     );
 
 
-  // =======================================================
-  // TITLE
-  // =======================================================
-
   title.textContent =
     event.title;
 
-
-  // =======================================================
-  // META
-  // =======================================================
 
   meta.innerHTML = `
 
@@ -926,10 +1051,6 @@ function openEvent(event) {
   `;
 
 
-  // =======================================================
-  // DESCRIPTION
-  // =======================================================
-
   description.innerHTML = `
 
     <p>
@@ -940,10 +1061,6 @@ function openEvent(event) {
 
   `;
 
-
-  // =======================================================
-  // TICKET BUTTON
-  // =======================================================
 
   if (
     event.url &&
@@ -969,10 +1086,6 @@ function openEvent(event) {
 
   }
 
-
-  // =======================================================
-  // SHOW
-  // =======================================================
 
   popup.classList.add(
     "open"
@@ -1194,10 +1307,6 @@ document.addEventListener(
     }
 
 
-    // =====================================================
-    // CLOSE BY CLICKING OUTSIDE POPUP
-    // =====================================================
-
     if (popup) {
 
       popup.addEventListener(
@@ -1218,10 +1327,6 @@ document.addEventListener(
     }
 
 
-    // =====================================================
-    // CLOSE WITH ESCAPE
-    // =====================================================
-
     document.addEventListener(
       "keydown",
       event => {
@@ -1238,12 +1343,7 @@ document.addEventListener(
     );
 
 
-    // =====================================================
-    // LOAD EVENTS
-    // =====================================================
-
     loadEvents();
-
 
   }
 );
