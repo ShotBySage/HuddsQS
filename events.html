@@ -1,8 +1,14 @@
 <!doctype html>
 <html lang="en-GB">
+
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1"
+>
 
 <title>Events | Hudds Queer Social</title>
 
@@ -12,11 +18,16 @@
 >
 
 <link rel="stylesheet" href="style.css">
+
+<link rel="stylesheet" href="events.css">
+
 </head>
+
 
 <body>
 
 <div class="site">
+
 
   <!-- HEADER -->
 
@@ -32,6 +43,7 @@
         >
 
         <div>
+
           <div class="brand-title">
             Hudds Queer Social
           </div>
@@ -39,6 +51,7 @@
           <div class="brand-sub">
             Huddersfield · LGBTQIA+ Community
           </div>
+
         </div>
 
       </a>
@@ -115,22 +128,82 @@
 
     <p class="page-intro">
       Discover upcoming events, socials and activities from Hudds Queer Social
-      and our wider community.
+      and our wider community in Huddersfield.
     </p>
 
 
-    <!-- EVENTS ARE INSERTED HERE AUTOMATICALLY -->
+    <!-- EVENT CALENDAR -->
 
-    <div
-      id="events-page-list"
-      class="event-list"
+    <section
+      class="events-calendar"
+      aria-label="Events calendar"
     >
 
-      <p>
-        Loading events...
-      </p>
+      <div class="calendar-header">
 
-    </div>
+        <button
+          type="button"
+          id="calendar-prev"
+          class="calendar-nav"
+          aria-label="Previous month"
+        >
+          ←
+        </button>
+
+
+        <h2 id="calendar-month">
+          Loading...
+        </h2>
+
+
+        <button
+          type="button"
+          id="calendar-next"
+          class="calendar-nav"
+          aria-label="Next month"
+        >
+          →
+        </button>
+
+      </div>
+
+
+      <div class="calendar-weekdays">
+
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div>Sat</div>
+        <div>Sun</div>
+
+      </div>
+
+
+      <div
+        id="events-calendar-grid"
+        class="calendar-grid"
+      >
+
+        <p class="calendar-loading">
+          Loading events...
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- SELECTED DAY EVENTS -->
+
+    <section
+      id="selected-events"
+      class="selected-events"
+      aria-live="polite"
+    >
+
+    </section>
 
   </main>
 
@@ -184,6 +257,7 @@
 
   </footer>
 
+
 </div>
 
 
@@ -221,10 +295,9 @@ function toggleMenu() {
 
 }
 
-
-loadEventsPage();
-
 </script>
 
+
 </body>
+
 </html>
