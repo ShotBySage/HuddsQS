@@ -3,7 +3,7 @@
 // EVENTS
 // =========================================================
 
-const EVENTS_API = "https://hqs-website.mxsagecrossley.workers.dev/events";
+const EVENTS_API = "/api/events";
 
 let events = [];
 let currentMonth = new Date().getMonth();
@@ -11,33 +11,36 @@ let currentYear = new Date().getFullYear();
 
 async function loadEvents() {
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
-
     const response = await fetch(EVENTS_API, {
       headers: { "Accept": "application/json" },
-      cache: "no-store",
-      signal: controller.signal
+      cache: "no-store"
     });
 
-    clearTimeout(timeout);
-
     if (!response.ok) {
-      throw new Error(`API returned ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`API returned ${response.status}: ${errorText}`);
     }
 
     const data = await response.json();
 
-    events = (data.data || [])
+    const rawEvents = Array.isArray(data)
+      ? data
+      : Array.isArray(data.data)
+        ? data.data
+        : [];
+
+    events = rawEvents
       .map(convertEvent)
       .filter(Boolean)
-      .filter(event => !hasEventEnded(event));
+      .filter(event => !hasEventEnded(event))
+      .sort((a, b) => getEventTimestamp(a) - getEventTimestamp(b));
 
     renderCalendar();
     renderHomepageEvents();
 
   } catch (error) {
     console.error("Events error:", error);
+
     renderHomepageEventsError();
 
     const calendar = document.getElementById("calendar-grid");
@@ -69,7 +72,7 @@ function convertEvent(event) {
   }
 
   const endDateTime = event.end?.iso || event.end?.datetime || null;
-  const ticketTypes = event.ticket_types || [];
+  const ticketTypes = Array.isArray(event.ticket_types) ? event.ticket_types : [];
   const ticketsAvailable = event.tickets_available === true || event.tickets_available === "true";
   const freeTickets = ticketTypes.some(ticket => Number(ticket.price) === 0);
 
@@ -97,6 +100,12 @@ function convertEvent(event) {
     description: cleanDescription(event.description),
     url: event.checkout_url || event.url || "#"
   };
+}
+
+function getEventTimestamp(event) {
+  const value = event.startDateTime || `${event.date}T23:59:59`;
+  const timestamp = new Date(value).getTime();
+  return Number.isNaN(timestamp) ? Number.MAX_SAFE_INTEGER : timestamp;
 }
 
 function hasEventEnded(event) {
@@ -139,10 +148,7 @@ function renderHomepageEvents() {
   const container = document.getElementById("homepage-events");
   if (!container) return;
 
-  const upcoming = events
-    .filter(event => !hasEventEnded(event))
-    .sort((a, b) => new Date(a.startDateTime || `${a.date}T23:59:59`) - new Date(b.startDateTime || `${b.date}T23:59:59`))
-    .slice(0, 6);
+  const upcoming = events.filter(event => !hasEventEnded(event)).slice(0, 6);
 
   if (upcoming.length === 0) {
     container.innerHTML = `
@@ -158,7 +164,7 @@ function renderHomepageEvents() {
     <article class="card homepage-event-card">
       <div class="date">${escapeHTML(formatLongDate(event.date))}</div>
       <h3>${escapeHTML(event.title)}</h3>
-      <p>${event.time ? escapeHTML(event.time) : "Time TBC"}</p>
+      <p>${escapeHTML(event.time || "Time TBC")}</p>
       <p>${escapeHTML(event.venue)}</p>
       <span class="tag ${escapeHTML(event.statusClass)}">${escapeHTML(event.cost)}</span>
       <button type="button" class="event-card-link" data-event-id="${escapeHTML(event.id)}">
@@ -345,21 +351,29 @@ function formatLongDate(dateString) {
   });
 }
 
+// =========================================================
+// MONTH NAVIGATION
+// =========================================================
+
 function previousMonth() {
   currentMonth--;
+
   if (currentMonth < 0) {
     currentMonth = 11;
     currentYear--;
   }
+
   renderCalendar();
 }
 
 function nextMonth() {
   currentMonth++;
+
   if (currentMonth > 11) {
     currentMonth = 0;
     currentYear++;
   }
+
   renderCalendar();
 }
 
@@ -396,5 +410,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (event.key === "Escape") closeEvent();
   });
 
+  renderCalendar();
   loadEvents();
 });
