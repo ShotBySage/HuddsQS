@@ -10,23 +10,29 @@
 
 let events = [];
 
-let currentMonth = new Date().getMonth();
-let currentYear = new Date().getFullYear();
+let currentMonth =
+  new Date().getMonth();
+
+let currentYear =
+  new Date().getFullYear();
 
 
 // =========================================================
-// LOAD EVENTS
+// LOAD TICKET TAILOR EVENTS
 // =========================================================
 
 async function loadEvents() {
 
   try {
 
-    const response = await fetch("/api/events");
+    const response =
+      await fetch("/api/events");
+
 
     if (!response.ok) {
 
-      const errorText = await response.text();
+      const errorText =
+        await response.text();
 
       throw new Error(
         `API returned ${response.status}: ${errorText}`
@@ -34,7 +40,10 @@ async function loadEvents() {
 
     }
 
-    const data = await response.json();
+
+    const data =
+      await response.json();
+
 
     events =
       (data.data || [])
@@ -43,19 +52,40 @@ async function loadEvents() {
         .filter(event => !hasEventEnded(event));
 
 
-    // Render whatever exists on this page.
-
     renderCalendar();
 
     renderHomepageEvents();
 
   } catch (error) {
 
-    console.error("Events error:", error);
+    console.error(
+      "Events error:",
+      error
+    );
+
+
+    renderHomepageEventsError();
 
 
     const calendar =
-      document.getElementById("calendar-grid");
+      document.getElementById(
+        "calendar-grid"
+      );
+
+
+    const month =
+      document.getElementById(
+        "calendar-month"
+      );
+
+
+    if (month) {
+
+      month.textContent =
+        "Events";
+
+    }
+
 
     if (calendar) {
 
@@ -78,37 +108,13 @@ async function loadEvents() {
 
     }
 
-
-    const homepage =
-      document.getElementById("homepage-events");
-
-    if (homepage) {
-
-      homepage.innerHTML = `
-
-        <div class="homepage-events-empty">
-
-          <p>
-            Events could not be loaded right now.
-          </p>
-
-          <a href="events.html">
-            View the events page →
-          </a>
-
-        </div>
-
-      `;
-
-    }
-
   }
 
 }
 
 
 // =========================================================
-// CONVERT EVENT
+// CONVERT TICKET TAILOR EVENT
 // =========================================================
 
 function convertEvent(event) {
@@ -120,14 +126,12 @@ function convertEvent(event) {
 
 
   if (!start) {
-
     return null;
-
   }
 
 
   // =======================================================
-  // DATE
+  // START DATE
   // =======================================================
 
   const date =
@@ -135,29 +139,34 @@ function convertEvent(event) {
 
 
   // =======================================================
-  // TIME
+  // START TIME
   // =======================================================
 
   let time = "";
 
 
-  if (event.start?.time) {
+  if (
+    event.start?.time
+  ) {
 
     time =
-      formatTime(event.start.time);
+      event.start.time;
 
-  } else if (start.includes("T")) {
+  } else if (
+    start.includes("T")
+  ) {
+
+    const timePart =
+      start.substring(11, 16);
 
     time =
-      formatTime(
-        start.substring(11, 16)
-      );
+      formatTime(timePart);
 
   }
 
 
   // =======================================================
-  // END
+  // END TIME
   // =======================================================
 
   const end =
@@ -166,8 +175,12 @@ function convertEvent(event) {
     null;
 
 
+  const endDateTime =
+    end || null;
+
+
   // =======================================================
-  // TICKETS
+  // TICKET STATUS
   // =======================================================
 
   const ticketTypes =
@@ -186,25 +199,34 @@ function convertEvent(event) {
     );
 
 
-  let cost = "PAID";
-  let statusClass = "paid";
+  let cost =
+    "PAID";
+
+  let statusClass =
+    "paid";
 
 
   if (!ticketsAvailable) {
 
-    cost = "SOLD OUT";
-    statusClass = "sold-out";
+    cost =
+      "SOLD OUT";
+
+    statusClass =
+      "sold-out";
 
   } else if (freeTickets) {
 
-    cost = "FREE TICKETS";
-    statusClass = "free";
+    cost =
+      "FREE TICKETS";
+
+    statusClass =
+      "free";
 
   }
 
 
   // =======================================================
-  // RETURN
+  // RETURN EVENT
   // =======================================================
 
   return {
@@ -227,7 +249,7 @@ function convertEvent(event) {
 
 
     endDateTime:
-      end,
+      endDateTime,
 
 
     title:
@@ -265,19 +287,22 @@ function convertEvent(event) {
 
 
 // =========================================================
-// EVENT ENDED?
+// CHECK WHETHER EVENT HAS ENDED
 // =========================================================
 
 function hasEventEnded(event) {
 
-  if (event.endDateTime) {
+  if (
+    event.endDateTime
+  ) {
 
     const end =
-      new Date(event.endDateTime);
+      new Date(
+        event.endDateTime
+      );
 
-    return (
-      end.getTime() <= Date.now()
-    );
+
+    return end.getTime() <= Date.now();
 
   }
 
@@ -302,9 +327,7 @@ function hasEventEnded(event) {
 function formatTime(timeString) {
 
   if (!timeString) {
-
     return "";
-
   }
 
 
@@ -313,9 +336,7 @@ function formatTime(timeString) {
 
 
   if (parts.length < 2) {
-
     return timeString;
-
   }
 
 
@@ -350,7 +371,7 @@ function cleanDescription(description) {
 
   if (!description) {
 
-    return "See the Ticket Tailor listing for more information.";
+    return "See the event listing for more information.";
 
   }
 
@@ -366,6 +387,225 @@ function cleanDescription(description) {
   return temporary.textContent
     .replace(/\s+/g, " ")
     .trim();
+
+}
+
+
+// =========================================================
+// HOMEPAGE EVENTS
+// =========================================================
+
+function renderHomepageEvents() {
+
+  const container =
+    document.getElementById(
+      "homepage-events"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  const upcoming =
+    events
+      .filter(
+        event =>
+          !hasEventEnded(event)
+      )
+      .sort(
+        (a, b) =>
+          new Date(a.startDateTime || `${a.date}T23:59:59`) -
+          new Date(b.startDateTime || `${b.date}T23:59:59`)
+      )
+      .slice(0, 6);
+
+
+  // =======================================================
+  // NO EVENTS
+  // =======================================================
+
+  if (upcoming.length === 0) {
+
+    container.innerHTML = `
+
+      <div class="homepage-events-empty">
+
+        <p>
+          Nothing coming up just yet.
+        </p>
+
+        <a
+          class="btn secondary"
+          href="events.html"
+        >
+          View events
+        </a>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  // =======================================================
+  // EVENT CARDS
+  // =======================================================
+
+  container.innerHTML =
+    upcoming
+      .map(
+        event => {
+
+          return `
+
+            <article class="card homepage-event-card">
+
+              <div class="date">
+
+                ${escapeHTML(
+                  formatLongDate(event.date)
+                )}
+
+              </div>
+
+
+              <h3>
+
+                ${escapeHTML(
+                  event.title
+                )}
+
+              </h3>
+
+
+              <p>
+
+                ${
+                  event.time
+                    ? escapeHTML(event.time)
+                    : "Time TBC"
+                }
+
+              </p>
+
+
+              <p>
+
+                ${escapeHTML(
+                  event.venue
+                )}
+
+              </p>
+
+
+              <span
+                class="tag ${escapeHTML(event.statusClass)}"
+              >
+
+                ${escapeHTML(
+                  event.cost
+                )}
+
+              </span>
+
+
+              <button
+                type="button"
+                class="event-card-link"
+                data-event-id="${escapeHTML(event.id)}"
+              >
+
+                More details →
+
+              </button>
+
+            </article>
+
+          `;
+
+        }
+      )
+      .join("");
+
+
+  // =======================================================
+  // HOMEPAGE CARD BUTTONS
+  // =======================================================
+
+  container
+    .querySelectorAll(
+      ".event-card-link"
+    )
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            const event =
+              events.find(
+                item =>
+                  String(item.id) ===
+                  String(button.dataset.eventId)
+              );
+
+
+            if (event) {
+
+              openEvent(event);
+
+            }
+
+          }
+        );
+
+      }
+    );
+
+}
+
+
+// =========================================================
+// HOMEPAGE ERROR
+// =========================================================
+
+function renderHomepageEventsError() {
+
+  const container =
+    document.getElementById(
+      "homepage-events"
+    );
+
+
+  if (!container) {
+    return;
+  }
+
+
+  container.innerHTML = `
+
+    <div class="homepage-events-empty">
+
+      <p>
+        Events could not be loaded right now.
+      </p>
+
+      <a
+        class="btn secondary"
+        href="events.html"
+      >
+        Try the events page
+      </a>
+
+    </div>
+
+  `;
 
 }
 
@@ -433,7 +673,7 @@ function formatMonth(
 
 
 // =========================================================
-// TODAY
+// CHECK TODAY
 // =========================================================
 
 function isToday(
@@ -456,7 +696,7 @@ function isToday(
 
 
 // =========================================================
-// SAME DATE
+// CHECK EVENT DATE
 // =========================================================
 
 function isSameDate(
@@ -482,7 +722,7 @@ function isSameDate(
 
 
 // =========================================================
-// ACTIVE EVENTS
+// GET CURRENT EVENTS
 // =========================================================
 
 function getActiveEvents() {
@@ -514,9 +754,7 @@ function renderCalendar() {
 
 
   if (!grid || !monthTitle) {
-
     return;
-
   }
 
 
@@ -552,7 +790,7 @@ function renderCalendar() {
 
 
   // =======================================================
-  // EMPTY DAYS BEFORE MONTH
+  // EMPTY DAYS
   // =======================================================
 
   for (
@@ -577,7 +815,7 @@ function renderCalendar() {
 
 
   // =======================================================
-  // DAYS
+  // MONTH DAYS
   // =======================================================
 
   for (
@@ -701,7 +939,7 @@ function renderCalendar() {
 
 
   // =======================================================
-  // COMPLETE FINAL WEEK
+  // FILL FINAL WEEK
   // =======================================================
 
   const totalCells =
@@ -739,200 +977,6 @@ function renderCalendar() {
     }
 
   }
-
-}
-
-
-// =========================================================
-// HOMEPAGE EVENTS
-// =========================================================
-
-function renderHomepageEvents() {
-
-  const container =
-    document.getElementById(
-      "homepage-events"
-    );
-
-
-  if (!container) {
-
-    return;
-
-  }
-
-
-  const upcoming =
-    getActiveEvents()
-      .sort(
-        (a, b) =>
-          new Date(a.startDateTime) -
-          new Date(b.startDateTime)
-      )
-      .slice(0, 3);
-
-
-  // =======================================================
-  // NO EVENTS
-  // =======================================================
-
-  if (upcoming.length === 0) {
-
-    container.innerHTML = `
-
-      <div class="homepage-events-empty">
-
-        <p>
-          Nothing coming up just yet.
-        </p>
-
-        <a href="events.html">
-          View all events →
-        </a>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  // =======================================================
-  // EVENT CARDS
-  // =======================================================
-
-  container.innerHTML =
-    upcoming.map(
-      event => {
-
-        return `
-
-          <article
-            class="
-              card
-              homepage-event-card
-              ${event.statusClass}
-            "
-          >
-
-            <div class="date">
-              ${escapeHTML(
-                formatShortDate(event.date)
-              )}
-            </div>
-
-
-            <h3>
-              ${escapeHTML(
-                event.title
-              )}
-            </h3>
-
-
-            <p>
-              ${escapeHTML(
-                event.time || "Time TBC"
-              )}
-            </p>
-
-
-            <p>
-              ${escapeHTML(
-                event.venue
-              )}
-            </p>
-
-
-            <span
-              class="tag ${event.statusClass}"
-            >
-              ${escapeHTML(
-                event.cost
-              )}
-            </span>
-
-
-            <button
-              type="button"
-              class="event-card-link"
-              data-event-id="${escapeHTML(event.id)}"
-            >
-              More info →
-            </button>
-
-          </article>
-
-        `;
-
-      }
-    )
-    .join("");
-
-
-  // =======================================================
-  // HOMEPAGE POPUP BUTTONS
-  // =======================================================
-
-  container
-    .querySelectorAll(
-      ".event-card-link"
-    )
-    .forEach(
-      button => {
-
-        button.addEventListener(
-          "click",
-          () => {
-
-            const event =
-              events.find(
-                item =>
-                  String(item.id) ===
-                  String(
-                    button.dataset.eventId
-                  )
-              );
-
-
-            if (event) {
-
-              openEvent(event);
-
-            }
-
-          }
-        );
-
-      }
-    );
-
-}
-
-
-// =========================================================
-// SHORT DATE
-// =========================================================
-
-function formatShortDate(
-  dateString
-) {
-
-  const date =
-    new Date(
-      `${dateString}T12:00:00`
-    );
-
-
-  return date.toLocaleDateString(
-    "en-GB",
-    {
-      weekday: "short",
-      day: "numeric",
-      month: "short"
-    }
-  );
 
 }
 
@@ -1097,8 +1141,7 @@ function openEvent(event) {
 
   } else {
 
-    ticket.innerHTML =
-      "";
+    ticket.innerHTML = "";
 
   }
 
@@ -1133,9 +1176,7 @@ function closeEvent() {
 
 
   if (!popup) {
-
     return;
-
   }
 
 
@@ -1157,7 +1198,7 @@ function closeEvent() {
 
 
 // =========================================================
-// LONG DATE
+// FORMAT LONG DATE
 // =========================================================
 
 function formatLongDate(
@@ -1197,6 +1238,7 @@ function previousMonth() {
   ) {
 
     currentMonth = 11;
+
     currentYear--;
 
   }
@@ -1217,6 +1259,7 @@ function nextMonth() {
   ) {
 
     currentMonth = 0;
+
     currentYear++;
 
   }
@@ -1236,7 +1279,6 @@ function goToToday() {
   currentMonth =
     today.getMonth();
 
-
   currentYear =
     today.getFullYear();
 
@@ -1247,7 +1289,7 @@ function goToToday() {
 
 
 // =========================================================
-// START
+// EVENT LISTENERS
 // =========================================================
 
 document.addEventListener(
@@ -1284,10 +1326,6 @@ document.addEventListener(
       );
 
 
-    // =====================================================
-    // MONTH BUTTONS
-    // =====================================================
-
     if (previous) {
 
       previous.addEventListener(
@@ -1318,10 +1356,6 @@ document.addEventListener(
     }
 
 
-    // =====================================================
-    // POPUP CLOSE
-    // =====================================================
-
     if (close) {
 
       close.addEventListener(
@@ -1331,6 +1365,10 @@ document.addEventListener(
 
     }
 
+
+    // =====================================================
+    // CLOSE OUTSIDE POPUP
+    // =====================================================
 
     if (popup) {
 
@@ -1353,7 +1391,7 @@ document.addEventListener(
 
 
     // =====================================================
-    // ESCAPE
+    // CLOSE WITH ESCAPE
     // =====================================================
 
     document.addEventListener(
@@ -1373,21 +1411,10 @@ document.addEventListener(
 
 
     // =====================================================
-    // LOAD ON EVERY PAGE THAT USES EVENTS.JS
+    // LOAD EVENTS
     // =====================================================
 
-    if (
-      document.getElementById(
-        "calendar-grid"
-      ) ||
-      document.getElementById(
-        "homepage-events"
-      )
-    ) {
-
-      loadEvents();
-
-    }
+    loadEvents();
 
   }
 );
