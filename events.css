@@ -1,0 +1,175 @@
+/* =========================
+   EVENTS PAGE ONLY
+   ========================= */
+
+/* Event list */
+
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+
+/* Event item */
+
+.event-item {
+  background: var(--white);
+  border: 2px solid var(--ink);
+  box-shadow: 4px 5px 0 var(--paper-dark);
+}
+
+
+/* Event header */
+
+.event-item summary {
+  list-style: none;
+  cursor: pointer;
+
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+
+  align-items: center;
+  gap: 20px;
+
+  padding: 18px 20px;
+}
+
+.event-item summary::-webkit-details-marker {
+  display: none;
+}
+
+
+/* Plus / minus */
+
+.event-item summary::after {
+  content: "+";
+
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.event-item[open] summary::after {
+  content: "−";
+}
+
+
+/* Date */
+
+.event-date {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+
+/* Main event information */
+
+.event-main {
+  min-width: 0;
+}
+
+.event-main h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.event-main p {
+  margin: 3px 0 0;
+  color: var(--muted);
+}
+
+
+/* Time + ticket status */
+
+.event-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.event-meta .tag {
+  margin-top: 0;
+}
+
+
+/* Expanded details */
+
+.event-details {
+  border-top: 2px solid var(--ink);
+
+  padding: 18px 20px 22px;
+
+  background: var(--paper);
+}
+
+.event-details p {
+  margin: 0 0 12px;
+}
+
+.event-details p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* Ticket link */
+
+.event-details a {
+  font-weight: 800;
+  text-underline-offset: 4px;
+}
+
+
+/* Sold out */
+
+.tag.sold-out {
+  color: #d00000;
+  border-color: #d00000;
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 800px) {
+
+  .event-item summary {
+    grid-template-columns: 70px 1fr auto;
+    gap: 12px;
+  }
+
+  .event-meta {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+  }
+
+}
+
+
+/* =========================
+   SMALL PHONES
+   ========================= */
+
+@media (max-width: 500px) {
+
+  .event-item summary {
+    grid-template-columns: 1fr auto;
+  }
+
+  .event-date {
+    grid-column: 1 / -1;
+  }
+
+  .event-main {
+    grid-column: 1;
+  }
+
+  .event-meta {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+}
