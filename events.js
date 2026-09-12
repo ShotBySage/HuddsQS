@@ -1,15 +1,25 @@
-// =========================
+// =========================================================
+// HUDDS QUEER SOCIAL
 // EVENTS
-// =========================
+// =========================================================
+
+
+// =========================================================
+// DATA
+// =========================================================
 
 let events = [];
 
-let calendarDate = new Date();
+let currentMonth =
+  new Date().getMonth();
+
+let currentYear =
+  new Date().getFullYear();
 
 
-// =========================
+// =========================================================
 // LOAD TICKET TAILOR EVENTS
-// =========================
+// =========================================================
 
 async function loadEvents() {
 
@@ -37,111 +47,11 @@ async function loadEvents() {
 
     events =
       (data.data || [])
-        .map(event => {
-
-          const start =
-            event.start?.datetime ||
-            event.start?.date;
-
-          if (!start) return null;
-
-
-          const date =
-            start.split("T")[0];
-
-
-          const time =
-            start.includes("T")
-              ? new Date(start).toLocaleTimeString(
-                  "en-GB",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit"
-                  }
-                )
-              : "";
-
-
-          // =========================
-          // TICKET STATUS
-          // =========================
-
-          const ticketTypes =
-            event.ticket_types || [];
-
-
-          const ticketsAvailable =
-            event.tickets_available === true ||
-            event.tickets_available === "true";
-
-
-          const freeTickets =
-            ticketTypes.some(ticket =>
-              Number(ticket.price) === 0
-            );
-
-
-          let cost;
-          let statusClass;
-
-
-          if (!ticketsAvailable) {
-
-            cost = "SOLD OUT";
-            statusClass = "sold-out";
-
-          } else if (freeTickets) {
-
-            cost = "FREE TICKETS";
-            statusClass = "free";
-
-          } else {
-
-            cost = "PAID";
-            statusClass = "paid";
-
-          }
-
-
-          return {
-
-            date: date,
-
-            time: time,
-
-            title:
-              event.name ||
-              "Untitled event",
-
-            venue:
-              event.venue?.name ||
-              "Location to be announced",
-
-            cost: cost,
-
-            statusClass: statusClass,
-
-            description:
-              event.description ||
-              "See the Ticket Tailor listing for more information.",
-
-            url:
-              event.checkout_url ||
-              event.url ||
-              "#"
-
-          };
-
-        })
+        .map(convertEvent)
         .filter(Boolean);
 
 
-    // Homepage stays the same
-    loadHomepageEvents();
-
-
-    // Events page becomes calendar
-    loadEventsPage();
+    renderCalendar();
 
   } catch (error) {
 
@@ -151,25 +61,22 @@ async function loadEvents() {
     );
 
 
-    const homepage =
-      document.getElementById(
-        "homepage-events"
-      );
-
-
     const calendar =
       document.getElementById(
-        "events-calendar-grid"
+        "calendar-grid"
       );
 
 
-    if (homepage) {
+    const month =
+      document.getElementById(
+        "calendar-month"
+      );
 
-      homepage.innerHTML = `
-        <p>
-          Events could not be loaded right now.
-        </p>
-      `;
+
+    if (month) {
+
+      month.textContent =
+        "Events";
 
     }
 
@@ -177,9 +84,20 @@ async function loadEvents() {
     if (calendar) {
 
       calendar.innerHTML = `
-        <p class="calendar-error">
-          Events could not be loaded right now.
-        </p>
+
+        <div
+          style="
+            grid-column: 1 / -1;
+            padding: 30px;
+          "
+        >
+
+          <p>
+            Events could not be loaded right now.
+          </p>
+
+        </div>
+
       `;
 
     }
@@ -189,246 +107,338 @@ async function loadEvents() {
 }
 
 
-// =========================
-// DATE HELPERS
-// =========================
+// =========================================================
+// CONVERT TICKET TAILOR EVENT
+// =========================================================
 
-function getUpcomingEvents() {
+function convertEvent(event) {
+
+  const start =
+    event.start?.iso ||
+    event.start?.datetime ||
+    event.start?.date;
+
+
+  if (!start) {
+    return null;
+  }
+
+
+  const date =
+    start.substring(0, 10);
+
+
+  let time = "";
+
+
+  if (
+    event.start?.time
+  ) {
+
+    time =
+      event.start.time;
+
+  } else if (
+    start.includes("T")
+  ) {
+
+    const timePart =
+      start.substring(11, 16);
+
+    time =
+      formatTime(timePart);
+
+  }
+
+
+  // =======================================================
+  // TICKET STATUS
+  // =======================================================
+
+  const ticketTypes =
+    event.ticket_types || [];
+
+
+  const ticketsAvailable =
+    event.tickets_available === true ||
+    event.tickets_available === "true";
+
+
+  const freeTickets =
+    ticketTypes.some(
+      ticket =>
+        Number(ticket.price) === 0
+    );
+
+
+  let cost =
+    "PAID";
+
+  let statusClass =
+    "paid";
+
+
+  if (!ticketsAvailable) {
+
+    cost =
+      "SOLD OUT";
+
+    statusClass =
+      "sold-out";
+
+  } else if (freeTickets) {
+
+    cost =
+      "FREE TICKETS";
+
+    statusClass =
+      "free";
+
+  }
+
+
+  return {
+
+    id:
+      event.id ||
+      Math.random().toString(36),
+
+
+    date:
+      date,
+
+
+    time:
+      time,
+
+
+    title:
+      event.name ||
+      "Untitled event",
+
+
+    venue:
+      event.venue?.name ||
+      "Location to be announced",
+
+
+    cost:
+      cost,
+
+
+    statusClass:
+      statusClass,
+
+
+    description:
+      cleanDescription(
+        event.description
+      ),
+
+
+    url:
+      event.checkout_url ||
+      event.url ||
+      "#"
+
+  };
+
+}
+
+
+// =========================================================
+// FORMAT TIME
+// =========================================================
+
+function formatTime(timeString) {
+
+  if (!timeString) {
+    return "";
+  }
+
+
+  const parts =
+    timeString.split(":");
+
+
+  if (parts.length < 2) {
+    return timeString;
+  }
+
+
+  const hours =
+    Number(parts[0]);
+
+  const minutes =
+    parts[1];
+
+
+  const suffix =
+    hours >= 12
+      ? "PM"
+      : "AM";
+
+
+  const displayHour =
+    hours % 12 || 12;
+
+
+  return `${displayHour}:${minutes} ${suffix}`;
+
+}
+
+
+// =========================================================
+// CLEAN TICKET TAILOR DESCRIPTION
+// =========================================================
+
+function cleanDescription(description) {
+
+  if (!description) {
+
+    return "See the Ticket Tailor listing for more information.";
+
+  }
+
+
+  const temporary =
+    document.createElement("div");
+
+
+  temporary.innerHTML =
+    description;
+
+
+  return temporary.textContent
+    .replace(/\s+/g, " ")
+    .trim();
+
+}
+
+
+// =========================================================
+// DATE HELPERS
+// =========================================================
+
+function getDaysInMonth(
+  year,
+  month
+) {
+
+  return new Date(
+    year,
+    month + 1,
+    0
+  ).getDate();
+
+}
+
+
+function getFirstDayOfMonth(
+  year,
+  month
+) {
+
+  const date =
+    new Date(
+      year,
+      month,
+      1
+    );
+
+
+  // JavaScript Sunday = 0
+  // Convert to Monday = 0
+
+  return (
+    date.getDay() + 6
+  ) % 7;
+
+}
+
+
+// =========================================================
+// FORMAT MONTH
+// =========================================================
+
+function formatMonth(
+  year,
+  month
+) {
+
+  return new Date(
+    year,
+    month,
+    1
+  ).toLocaleDateString(
+    "en-GB",
+    {
+      month: "long",
+      year: "numeric"
+    }
+  );
+
+}
+
+
+// =========================================================
+// CHECK TODAY
+// =========================================================
+
+function isToday(
+  year,
+  month,
+  day
+) {
 
   const today =
     new Date();
 
 
-  today.setHours(
-    0,
-    0,
-    0,
-    0
-  );
-
-
-  return events
-
-    .filter(event => {
-
-      const eventDate =
-        new Date(
-          event.date +
-          "T23:59:59"
-        );
-
-
-      return eventDate >= today;
-
-    })
-
-    .sort((a, b) => {
-
-      return (
-        new Date(a.date) -
-        new Date(b.date)
-      );
-
-    });
-
-}
-
-
-function formatDate(dateString) {
-
-  const date =
-    new Date(
-      dateString +
-      "T12:00:00"
-    );
-
-
-  return date.toLocaleDateString(
-    "en-GB",
-    {
-      day: "numeric",
-      month: "long"
-    }
+  return (
+    today.getFullYear() === year &&
+    today.getMonth() === month &&
+    today.getDate() === day
   );
 
 }
 
 
-function formatShortDate(dateString) {
+// =========================================================
+// CHECK EVENT DATE
+// =========================================================
+
+function isSameDate(
+  event,
+  year,
+  month,
+  day
+) {
 
   const date =
     new Date(
-      dateString +
-      "T12:00:00"
+      `${event.date}T12:00:00`
     );
 
 
-  return date.toLocaleDateString(
-    "en-GB",
-    {
-      day: "2-digit",
-      month: "short"
-    }
-  ).toUpperCase();
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month &&
+    date.getDate() === day
+  );
 
 }
 
 
-// =========================
-// HOMEPAGE
-// =========================
-
-function loadHomepageEvents() {
-
-  const container =
-    document.getElementById(
-      "homepage-events"
-    );
-
-
-  if (!container) return;
-
-
-  const upcomingEvents =
-    getUpcomingEvents();
-
-
-  if (
-    upcomingEvents.length === 0
-  ) {
-
-    container.innerHTML = `
-      <p>
-        No upcoming events at the moment.
-        Check back soon!
-      </p>
-    `;
-
-    return;
-
-  }
-
-
-  const homepageEvents =
-    upcomingEvents.slice(0, 6);
-
-
-  container.innerHTML =
-    homepageEvents.map(event => {
-
-      return `
-
-        <article class="card">
-
-          <div class="date">
-            ${formatDate(event.date)} · ${event.time}
-          </div>
-
-
-          <h3>
-            ${event.title}
-          </h3>
-
-
-          <p>
-            ${event.venue}
-          </p>
-
-
-          <span class="tag ${event.statusClass}">
-            ${event.cost}
-          </span>
-
-        </article>
-
-      `;
-
-    }).join("");
-
-}
-
-
-// =========================
-// EVENTS PAGE
-// =========================
-
-function loadEventsPage() {
-
-  const calendar =
-    document.getElementById(
-      "events-calendar-grid"
-    );
-
-
-  if (!calendar) return;
-
-
-  setupCalendarButtons();
-
-  renderCalendar();
-
-}
-
-
-// =========================
-// CALENDAR BUTTONS
-// =========================
-
-function setupCalendarButtons() {
-
-  const previous =
-    document.getElementById(
-      "calendar-prev"
-    );
-
-
-  const next =
-    document.getElementById(
-      "calendar-next"
-    );
-
-
-  if (previous) {
-
-    previous.onclick = () => {
-
-      calendarDate.setMonth(
-        calendarDate.getMonth() - 1
-      );
-
-      renderCalendar();
-
-    };
-
-  }
-
-
-  if (next) {
-
-    next.onclick = () => {
-
-      calendarDate.setMonth(
-        calendarDate.getMonth() + 1
-      );
-
-      renderCalendar();
-
-    };
-
-  }
-
-}
-
-
-// =========================
+// =========================================================
 // RENDER CALENDAR
-// =========================
+// =========================================================
 
 function renderCalendar() {
 
-  const calendar =
+  const grid =
     document.getElementById(
-      "events-calendar-grid"
+      "calendar-grid"
     );
 
 
@@ -438,73 +448,38 @@ function renderCalendar() {
     );
 
 
-  if (!calendar || !monthTitle) return;
-
-
-  const year =
-    calendarDate.getFullYear();
-
-
-  const month =
-    calendarDate.getMonth();
+  if (!grid || !monthTitle) {
+    return;
+  }
 
 
   monthTitle.textContent =
-    new Date(
-      year,
-      month,
-      1
-    ).toLocaleDateString(
-      "en-GB",
-      {
-        month: "long",
-        year: "numeric"
-      }
+    formatMonth(
+      currentYear,
+      currentMonth
     );
 
 
-  // First day of month
-  // Convert Sunday = 0 into
-  // Monday = 0
-
-  let firstDay =
-    new Date(
-      year,
-      month,
-      1
-    ).getDay();
+  grid.innerHTML = "";
 
 
-  firstDay =
-    firstDay === 0
-      ? 6
-      : firstDay - 1;
+  const days =
+    getDaysInMonth(
+      currentYear,
+      currentMonth
+    );
 
 
-  const daysInMonth =
-    new Date(
-      year,
-      month + 1,
-      0
-    ).getDate();
+  const firstDay =
+    getFirstDayOfMonth(
+      currentYear,
+      currentMonth
+    );
 
 
-  const today =
-    new Date();
-
-
-  today.setHours(
-    0,
-    0,
-    0,
-    0
-  );
-
-
-  let html = "";
-
-
-  // Empty cells before month starts
+  // =======================================================
+  // EMPTY DAYS BEFORE MONTH STARTS
+  // =======================================================
 
   for (
     let i = 0;
@@ -512,333 +487,624 @@ function renderCalendar() {
     i++
   ) {
 
-    html += `
-      <div class="calendar-day empty"></div>
-    `;
+    const empty =
+      document.createElement("div");
+
+
+    empty.className =
+      "calendar-day empty";
+
+
+    grid.appendChild(empty);
 
   }
 
 
-  // Actual days
+  // =======================================================
+  // MONTH DAYS
+  // =======================================================
 
   for (
     let day = 1;
-    day <= daysInMonth;
+    day <= days;
     day++
   ) {
 
-    const dateString =
-      `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    const cell =
+      document.createElement("div");
+
+
+    cell.className =
+      "calendar-day";
+
+
+    if (
+      isToday(
+        currentYear,
+        currentMonth,
+        day
+      )
+    ) {
+
+      cell.classList.add(
+        "today"
+      );
+
+    }
+
+
+    // =====================================================
+    // DAY NUMBER
+    // =====================================================
+
+    const number =
+      document.createElement("div");
+
+
+    number.className =
+      "calendar-day-number";
+
+
+    number.textContent =
+      day;
+
+
+    cell.appendChild(number);
+
+
+    // =====================================================
+    // EVENTS
+    // =====================================================
+
+    const eventContainer =
+      document.createElement("div");
+
+
+    eventContainer.className =
+      "calendar-events";
 
 
     const dayEvents =
-      getUpcomingEvents().filter(
+      events.filter(
         event =>
-          event.date === dateString
+          isSameDate(
+            event,
+            currentYear,
+            currentMonth,
+            day
+          )
       );
 
 
-    const thisDate =
-      new Date(
-        year,
-        month,
-        day
-      );
+    dayEvents.forEach(
+      event => {
+
+        const eventButton =
+          document.createElement("button");
 
 
-    const isToday =
-      thisDate.getTime() ===
-      today.getTime();
+        eventButton.type =
+          "button";
 
 
-    const hasEvents =
-      dayEvents.length > 0;
+        eventButton.className =
+          `calendar-event ${event.statusClass}`;
 
 
-    html += `
+        eventButton.innerHTML = `
 
-      <button
-        type="button"
-        class="
-          calendar-day
-          ${hasEvents ? "has-events" : ""}
-          ${isToday ? "today" : ""}
-        "
-        data-date="${dateString}"
-      >
+          <span class="calendar-event-time">
+            ${escapeHTML(event.time)}
+          </span>
 
-        <span class="calendar-day-number">
-          ${day}
-        </span>
+          <span class="calendar-event-title">
+            ${escapeHTML(event.title)}
+          </span>
 
-        ${
-          hasEvents
-            ? `
-              <span class="calendar-event-count">
-                ${dayEvents.length}
-                ${dayEvents.length === 1 ? "event" : "events"}
-              </span>
-            `
-            : ""
-        }
+        `;
 
-      </button>
 
-    `;
+        eventButton.addEventListener(
+          "click",
+          () => openEvent(event)
+        );
+
+
+        eventContainer.appendChild(
+          eventButton
+        );
+
+      }
+    );
+
+
+    cell.appendChild(
+      eventContainer
+    );
+
+
+    grid.appendChild(cell);
 
   }
 
 
-  calendar.innerHTML =
-    html;
+  // =======================================================
+  // FILL FINAL WEEK
+  // =======================================================
+
+  const totalCells =
+    firstDay + days;
 
 
-  // Add click handlers
+  const remainder =
+    totalCells % 7;
 
-  calendar
-    .querySelectorAll(
-      ".calendar-day:not(.empty)"
-    )
-    .forEach(day => {
 
-      day.addEventListener(
-        "click",
-        () => {
+  if (remainder !== 0) {
 
-          showEventsForDate(
-            day.dataset.date
-          );
+    const remaining =
+      7 - remainder;
 
-        }
+
+    for (
+      let i = 0;
+      i < remaining;
+      i++
+    ) {
+
+      const empty =
+        document.createElement("div");
+
+
+      empty.className =
+        "calendar-day empty";
+
+
+      grid.appendChild(
+        empty
       );
 
-    });
-
-
-  // Automatically show first
-  // event in the month if there is one
-
-  const firstEvent =
-    getUpcomingEvents()
-      .find(event => {
-
-        const eventDate =
-          new Date(
-            event.date +
-            "T12:00:00"
-          );
-
-
-        return (
-          eventDate.getFullYear() === year &&
-          eventDate.getMonth() === month
-        );
-
-      });
-
-
-  if (firstEvent) {
-
-    showEventsForDate(
-      firstEvent.date
-    );
-
-  } else {
-
-    clearSelectedEvents();
+    }
 
   }
 
 }
 
 
-// =========================
-// SHOW EVENTS FOR DATE
-// =========================
+// =========================================================
+// ESCAPE HTML
+// =========================================================
 
-function showEventsForDate(
-  dateString
-) {
+function escapeHTML(value) {
 
-  const container =
-    document.getElementById(
-      "selected-events"
+  return String(value)
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
     );
 
+}
 
-  if (!container) return;
 
+// =========================================================
+// OPEN EVENT
+// =========================================================
 
-  const selectedEvents =
-    getUpcomingEvents().filter(
-      event =>
-        event.date === dateString
+function openEvent(event) {
+
+  const popup =
+    document.getElementById(
+      "event-popup"
     );
 
 
   const date =
-    new Date(
-      dateString +
-      "T12:00:00"
+    document.getElementById(
+      "event-popup-date"
     );
 
 
-  const heading =
-    date.toLocaleDateString(
-      "en-GB",
-      {
-        weekday: "long",
-        day: "numeric",
-        month: "long"
-      }
+  const title =
+    document.getElementById(
+      "event-popup-title"
+    );
+
+
+  const meta =
+    document.getElementById(
+      "event-popup-meta"
+    );
+
+
+  const description =
+    document.getElementById(
+      "event-popup-description"
+    );
+
+
+  const ticket =
+    document.getElementById(
+      "event-popup-ticket"
     );
 
 
   if (
-    selectedEvents.length === 0
+    !popup ||
+    !date ||
+    !title ||
+    !meta ||
+    !description ||
+    !ticket
   ) {
-
-    container.innerHTML = `
-
-      <div class="selected-events-empty">
-
-        <h2>
-          ${heading}
-        </h2>
-
-        <p>
-          No events on this day.
-        </p>
-
-      </div>
-
-    `;
 
     return;
 
   }
 
 
-  container.innerHTML = `
+  // =======================================================
+  // DATE
+  // =======================================================
 
-    <div class="selected-events-heading">
-
-      <div class="kicker">
-        Events
-      </div>
-
-      <h2>
-        ${heading}
-      </h2>
-
-    </div>
-
-
-    <div class="selected-event-list">
-
-      ${selectedEvents.map(event => {
-
-        return `
-
-          <article class="selected-event">
-
-            <div class="selected-event-time">
-              ${event.time}
-            </div>
-
-
-            <div class="selected-event-content">
-
-              <h3>
-                ${event.title}
-              </h3>
-
-
-              <p>
-                ${event.venue}
-              </p>
-
-
-              <p>
-                ${event.description}
-              </p>
-
-
-              <span class="tag ${event.statusClass}">
-                ${event.cost}
-              </span>
-
-
-              ${
-                event.url !== "#"
-                  ? `
-                    <p>
-
-                      <a
-                        class="btn"
-                        href="${event.url}"
-                        target="_blank"
-                        rel="noopener"
-                      >
-                        View tickets →
-                      </a>
-
-                    </p>
-                  `
-                  : ""
-              }
-
-            </div>
-
-          </article>
-
-        `;
-
-      }).join("")}
-
-    </div>
-
-  `;
-
-}
-
-
-// =========================
-// CLEAR SELECTED EVENTS
-// =========================
-
-function clearSelectedEvents() {
-
-  const container =
-    document.getElementById(
-      "selected-events"
+  date.textContent =
+    formatLongDate(
+      event.date
     );
 
 
-  if (!container) return;
+  // =======================================================
+  // TITLE
+  // =======================================================
+
+  title.textContent =
+    event.title;
 
 
-  container.innerHTML = `
+  // =======================================================
+  // META
+  // =======================================================
 
-    <div class="selected-events-empty">
+  meta.innerHTML = `
 
-      <h2>
-        No upcoming events this month
-      </h2>
+    <span>
+      ${escapeHTML(event.time || "Time TBC")}
+    </span>
 
-      <p>
-        Check another month using the arrows above.
-      </p>
+    <span>
+      ${escapeHTML(event.venue)}
+    </span>
 
-    </div>
+    <span>
+      ${escapeHTML(event.cost)}
+    </span>
 
   `;
+
+
+  // =======================================================
+  // DESCRIPTION
+  // =======================================================
+
+  description.innerHTML = `
+
+    <p>
+      ${escapeHTML(event.description)}
+    </p>
+
+  `;
+
+
+  // =======================================================
+  // TICKET BUTTON
+  // =======================================================
+
+  if (
+    event.url &&
+    event.url !== "#"
+  ) {
+
+    ticket.innerHTML = `
+
+      <a
+        class="event-popup-ticket"
+        href="${escapeHTML(event.url)}"
+        target="_blank"
+        rel="noopener"
+      >
+        View tickets →
+      </a>
+
+    `;
+
+  } else {
+
+    ticket.innerHTML = "";
+
+  }
+
+
+  // =======================================================
+  // SHOW
+  // =======================================================
+
+  popup.classList.add(
+    "open"
+  );
+
+
+  popup.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+
+  document.body.style.overflow =
+    "hidden";
 
 }
 
 
-// =========================
-// START
-// =========================
+// =========================================================
+// CLOSE EVENT
+// =========================================================
 
-loadEvents();
+function closeEvent() {
+
+  const popup =
+    document.getElementById(
+      "event-popup"
+    );
+
+
+  if (!popup) {
+    return;
+  }
+
+
+  popup.classList.remove(
+    "open"
+  );
+
+
+  popup.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+
+  document.body.style.overflow =
+    "";
+
+}
+
+
+// =========================================================
+// FORMAT LONG DATE
+// =========================================================
+
+function formatLongDate(
+  dateString
+) {
+
+  const date =
+    new Date(
+      `${dateString}T12:00:00`
+    );
+
+
+  return date.toLocaleDateString(
+    "en-GB",
+    {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    }
+  );
+
+}
+
+
+// =========================================================
+// MONTH NAVIGATION
+// =========================================================
+
+function previousMonth() {
+
+  currentMonth--;
+
+
+  if (
+    currentMonth < 0
+  ) {
+
+    currentMonth = 11;
+
+    currentYear--;
+
+  }
+
+
+  renderCalendar();
+
+}
+
+
+function nextMonth() {
+
+  currentMonth++;
+
+
+  if (
+    currentMonth > 11
+  ) {
+
+    currentMonth = 0;
+
+    currentYear++;
+
+  }
+
+
+  renderCalendar();
+
+}
+
+
+function goToToday() {
+
+  const today =
+    new Date();
+
+
+  currentMonth =
+    today.getMonth();
+
+  currentYear =
+    today.getFullYear();
+
+
+  renderCalendar();
+
+}
+
+
+// =========================================================
+// EVENT LISTENERS
+// =========================================================
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+
+    const previous =
+      document.getElementById(
+        "previous-month"
+      );
+
+
+    const next =
+      document.getElementById(
+        "next-month"
+      );
+
+
+    const today =
+      document.getElementById(
+        "today-month"
+      );
+
+
+    const close =
+      document.getElementById(
+        "event-popup-close"
+      );
+
+
+    const popup =
+      document.getElementById(
+        "event-popup"
+      );
+
+
+    if (previous) {
+
+      previous.addEventListener(
+        "click",
+        previousMonth
+      );
+
+    }
+
+
+    if (next) {
+
+      next.addEventListener(
+        "click",
+        nextMonth
+      );
+
+    }
+
+
+    if (today) {
+
+      today.addEventListener(
+        "click",
+        goToToday
+      );
+
+    }
+
+
+    if (close) {
+
+      close.addEventListener(
+        "click",
+        closeEvent
+      );
+
+    }
+
+
+    // Close by clicking outside popup
+
+    if (popup) {
+
+      popup.addEventListener(
+        "click",
+        event => {
+
+          if (
+            event.target === popup
+          ) {
+
+            closeEvent();
+
+          }
+
+        }
+      );
+
+    }
+
+
+    // Close with Escape
+
+    document.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key === "Escape"
+        ) {
+
+          closeEvent();
+
+        }
+
+      }
+    );
+
+
+    loadEvents();
+
+  }
+);
