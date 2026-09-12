@@ -15,21 +15,56 @@
   padding: 18px;
 }
 
-.newsletter-page {
+.newsletter-viewer {
   width: min(900px, 100%);
-  margin: 0 auto 22px;
-  background: white;
-  box-shadow: 5px 6px 0 rgba(17,17,17,.12);
+  margin: 0 auto;
 }
 
-.newsletter-page:last-child {
-  margin-bottom: 0;
+.newsletter-page {
+  width: 100%;
+  background: white;
+  box-shadow: 5px 6px 0 rgba(17,17,17,.12);
 }
 
 .newsletter-page canvas {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.newsletter-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.newsletter-controls button {
+  background: var(--ink);
+  color: white;
+  border: 2px solid var(--ink);
+  padding: 10px 18px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--accent);
+}
+
+.newsletter-controls button:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+}
+
+.newsletter-controls button:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.newsletter-page-count {
+  min-width: 90px;
+  text-align: center;
+  font-weight: 800;
 }
 
 .newsletter-loading {
@@ -49,9 +84,12 @@
     padding: 8px;
   }
 
-  .newsletter-page {
-    margin-bottom: 14px;
-    box-shadow: 3px 4px 0 rgba(17,17,17,.12);
+  .newsletter-controls {
+    gap: 10px;
+  }
+
+  .newsletter-controls button {
+    padding: 10px 14px;
   }
 }
 </style>
@@ -94,8 +132,18 @@
       <a href="newsletter/HQS%20Newsletter_20260912_192536_0000.pdf" target="_blank" rel="noopener">Open PDF ↗</a>
     </div>
 
-    <div class="newsletter-pdf" id="newsletter-viewer" aria-label="September 2026 newsletter">
-      <div class="newsletter-loading" id="newsletter-loading">Loading newsletter…</div>
+    <div class="newsletter-pdf" aria-label="September 2026 newsletter">
+      <div class="newsletter-viewer">
+        <div class="newsletter-page" id="newsletter-page">
+          <div class="newsletter-loading" id="newsletter-loading">Loading newsletter…</div>
+        </div>
+
+        <div class="newsletter-controls" id="newsletter-controls" hidden>
+          <button type="button" id="newsletter-prev" aria-label="Previous page">← Previous</button>
+          <span class="newsletter-page-count" id="newsletter-page-count">Page 1 of 1</span>
+          <button type="button" id="newsletter-next" aria-label="Next page">Next →</button>
+        </div>
+      </div>
     </div>
   </section>
 </main>
@@ -128,42 +176,70 @@ function toggleMenu() {
 }
 
 const pdfUrl = "newsletter/HQS%20Newsletter_20260912_192536_0000.pdf";
-const viewer = document.getElementById("newsletter-viewer");
+const pageContainer = document.getElementById("newsletter-page");
 const loading = document.getElementById("newsletter-loading");
+const controls = document.getElementById("newsletter-controls");
+const previousButton = document.getElementById("newsletter-prev");
+const nextButton = document.getElementById("newsletter-next");
+const pageCount = document.getElementById("newsletter-page-count");
+
+let newsletterPdf = null;
+let currentPage = 1;
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
+async function renderNewsletterPage(pageNumber) {
+  const page = await newsletterPdf.getPage(pageNumber);
+  const viewerWidth = pageContainer.clientWidth || 900;
+  const baseViewport = page.getViewport({ scale: 1 });
+  const scale = viewerWidth / baseViewport.width;
+  const viewport = page.getViewport({ scale });
+  const outputScale = window.devicePixelRatio || 1;
+
+  pageContainer.innerHTML = "";
+
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+
+  canvas.width = Math.floor(viewport.width * outputScale);
+  canvas.height = Math.floor(viewport.height * outputScale);
+  canvas.style.width = "100%";
+  canvas.style.height = "auto";
+
+  pageContainer.appendChild(canvas);
+
+  await page.render({
+    canvasContext: context,
+    viewport: viewport,
+    transform: outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null
+  }).promise;
+
+  pageCount.textContent = `Page ${pageNumber} of ${newsletterPdf.numPages}`;
+  previousButton.disabled = pageNumber === 1;
+  nextButton.disabled = pageNumber === newsletterPdf.numPages;
+}
+
+async function showNewsletterPage(pageNumber) {
+  if (!newsletterPdf) return;
+
+  currentPage = Math.max(1, Math.min(pageNumber, newsletterPdf.numPages));
+  await renderNewsletterPage(currentPage);
+}
+
+previousButton.addEventListener("click", () => showNewsletterPage(currentPage - 1));
+nextButton.addEventListener("click", () => showNewsletterPage(currentPage + 1));
+
+document.addEventListener("keydown", event => {
+  if (event.key === "ArrowLeft") showNewsletterPage(currentPage - 1);
+  if (event.key === "ArrowRight") showNewsletterPage(currentPage + 1);
+});
+
 async function loadNewsletter() {
   try {
-    const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+    newsletterPdf = await pdfjsLib.getDocument(pdfUrl).promise;
 
-    if (loading) loading.remove();
-
-    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
-      const page = await pdf.getPage(pageNumber);
-      const viewport = page.getViewport({ scale: 1.5 });
-      const outputScale = window.devicePixelRatio || 1;
-
-      const wrapper = document.createElement("div");
-      wrapper.className = "newsletter-page";
-
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-
-      canvas.width = Math.floor(viewport.width * outputScale);
-      canvas.height = Math.floor(viewport.height * outputScale);
-      canvas.style.width = "100%";
-      canvas.style.height = "auto";
-
-      wrapper.appendChild(canvas);
-      viewer.appendChild(wrapper);
-
-      await page.render({
-        canvasContext: context,
-        viewport: viewport,
-        transform: outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null
-      }).promise;
-    }
+    controls.hidden = false;
+    await renderNewsletterPage(1);
   } catch (error) {
     console.error("Newsletter error:", error);
 
