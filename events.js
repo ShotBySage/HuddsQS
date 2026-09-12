@@ -10,29 +10,23 @@
 
 let events = [];
 
-let currentMonth =
-  new Date().getMonth();
-
-let currentYear =
-  new Date().getFullYear();
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
 
 
 // =========================================================
-// LOAD EVENTS FROM TICKET TAILOR API
+// LOAD EVENTS
 // =========================================================
 
 async function loadEvents() {
 
   try {
 
-    const response =
-      await fetch("/api/events");
-
+    const response = await fetch("/api/events");
 
     if (!response.ok) {
 
-      const errorText =
-        await response.text();
+      const errorText = await response.text();
 
       throw new Error(
         `API returned ${response.status}: ${errorText}`
@@ -40,10 +34,7 @@ async function loadEvents() {
 
     }
 
-
-    const data =
-      await response.json();
-
+    const data = await response.json();
 
     events =
       (data.data || [])
@@ -52,40 +43,19 @@ async function loadEvents() {
         .filter(event => !hasEventEnded(event));
 
 
+    // Render whatever exists on this page.
+
     renderCalendar();
 
-
-    // Also update the homepage if it exists.
     renderHomepageEvents();
-
 
   } catch (error) {
 
-    console.error(
-      "Events error:",
-      error
-    );
+    console.error("Events error:", error);
 
 
     const calendar =
-      document.getElementById(
-        "calendar-grid"
-      );
-
-
-    const month =
-      document.getElementById(
-        "calendar-month"
-      );
-
-
-    if (month) {
-
-      month.textContent =
-        "Events";
-
-    }
-
+      document.getElementById("calendar-grid");
 
     if (calendar) {
 
@@ -109,25 +79,24 @@ async function loadEvents() {
     }
 
 
-    // Homepage fallback
-
     const homepage =
-      document.getElementById(
-        "homepage-events"
-      );
-
+      document.getElementById("homepage-events");
 
     if (homepage) {
 
       homepage.innerHTML = `
 
-        <p>
-          Events could not be loaded right now.
-        </p>
+        <div class="homepage-events-empty">
 
-        <a href="events.html">
-          View the events page →
-        </a>
+          <p>
+            Events could not be loaded right now.
+          </p>
+
+          <a href="events.html">
+            View the events page →
+          </a>
+
+        </div>
 
       `;
 
@@ -139,7 +108,7 @@ async function loadEvents() {
 
 
 // =========================================================
-// CONVERT TICKET TAILOR EVENT
+// CONVERT EVENT
 // =========================================================
 
 function convertEvent(event) {
@@ -158,7 +127,7 @@ function convertEvent(event) {
 
 
   // =======================================================
-  // START DATE
+  // DATE
   // =======================================================
 
   const date =
@@ -166,7 +135,7 @@ function convertEvent(event) {
 
 
   // =======================================================
-  // START TIME
+  // TIME
   // =======================================================
 
   let time = "";
@@ -175,23 +144,20 @@ function convertEvent(event) {
   if (event.start?.time) {
 
     time =
-      formatTime(
-        event.start.time
-      );
+      formatTime(event.start.time);
 
   } else if (start.includes("T")) {
 
-    const timePart =
-      start.substring(11, 16);
-
     time =
-      formatTime(timePart);
+      formatTime(
+        start.substring(11, 16)
+      );
 
   }
 
 
   // =======================================================
-  // END TIME
+  // END
   // =======================================================
 
   const end =
@@ -201,7 +167,7 @@ function convertEvent(event) {
 
 
   // =======================================================
-  // TICKET STATUS
+  // TICKETS
   // =======================================================
 
   const ticketTypes =
@@ -220,35 +186,25 @@ function convertEvent(event) {
     );
 
 
-  let cost =
-    "PAID";
-
-
-  let statusClass =
-    "paid";
+  let cost = "PAID";
+  let statusClass = "paid";
 
 
   if (!ticketsAvailable) {
 
-    cost =
-      "SOLD OUT";
-
-    statusClass =
-      "sold-out";
+    cost = "SOLD OUT";
+    statusClass = "sold-out";
 
   } else if (freeTickets) {
 
-    cost =
-      "FREE TICKETS";
-
-    statusClass =
-      "free";
+    cost = "FREE TICKETS";
+    statusClass = "free";
 
   }
 
 
   // =======================================================
-  // RETURN EVENT
+  // RETURN
   // =======================================================
 
   return {
@@ -309,7 +265,7 @@ function convertEvent(event) {
 
 
 // =========================================================
-// CHECK WHETHER EVENT HAS ENDED
+// EVENT ENDED?
 // =========================================================
 
 function hasEventEnded(event) {
@@ -317,10 +273,7 @@ function hasEventEnded(event) {
   if (event.endDateTime) {
 
     const end =
-      new Date(
-        event.endDateTime
-      );
-
+      new Date(event.endDateTime);
 
     return (
       end.getTime() <= Date.now()
@@ -480,7 +433,7 @@ function formatMonth(
 
 
 // =========================================================
-// CHECK TODAY
+// TODAY
 // =========================================================
 
 function isToday(
@@ -503,7 +456,7 @@ function isToday(
 
 
 // =========================================================
-// CHECK EVENT DATE
+// SAME DATE
 // =========================================================
 
 function isSameDate(
@@ -529,7 +482,7 @@ function isSameDate(
 
 
 // =========================================================
-// GET ACTIVE EVENTS
+// ACTIVE EVENTS
 // =========================================================
 
 function getActiveEvents() {
@@ -581,8 +534,7 @@ function renderCalendar() {
     );
 
 
-  grid.innerHTML =
-    "";
+  grid.innerHTML = "";
 
 
   const days =
@@ -600,7 +552,7 @@ function renderCalendar() {
 
 
   // =======================================================
-  // EMPTY DAYS
+  // EMPTY DAYS BEFORE MONTH
   // =======================================================
 
   for (
@@ -625,7 +577,7 @@ function renderCalendar() {
 
 
   // =======================================================
-  // MONTH DAYS
+  // DAYS
   // =======================================================
 
   for (
@@ -749,7 +701,7 @@ function renderCalendar() {
 
 
   // =======================================================
-  // FILL FINAL WEEK
+  // COMPLETE FINAL WEEK
   // =======================================================
 
   const totalCells =
@@ -795,41 +747,6 @@ function renderCalendar() {
 // HOMEPAGE EVENTS
 // =========================================================
 
-function loadHomepageEvents() {
-
-  // If the homepage is present, start loading events.
-
-  const container =
-    document.getElementById(
-      "homepage-events"
-    );
-
-
-  if (!container) {
-
-    return;
-
-  }
-
-
-  container.innerHTML = `
-
-    <p>
-      Loading events...
-    </p>
-
-  `;
-
-
-  loadEvents();
-
-}
-
-
-// =========================================================
-// RENDER HOMEPAGE EVENTS
-// =========================================================
-
 function renderHomepageEvents() {
 
   const container =
@@ -870,7 +787,7 @@ function renderHomepageEvents() {
         </p>
 
         <a href="events.html">
-          Check the events page →
+          View all events →
         </a>
 
       </div>
@@ -883,7 +800,7 @@ function renderHomepageEvents() {
 
 
   // =======================================================
-  // EVENTS
+  // EVENT CARDS
   // =======================================================
 
   container.innerHTML =
@@ -901,49 +818,39 @@ function renderHomepageEvents() {
           >
 
             <div class="date">
-
               ${escapeHTML(
                 formatShortDate(event.date)
               )}
-
             </div>
 
 
             <h3>
-
               ${escapeHTML(
                 event.title
               )}
-
             </h3>
 
 
             <p>
-
               ${escapeHTML(
                 event.time || "Time TBC"
               )}
-
             </p>
 
 
             <p>
-
               ${escapeHTML(
                 event.venue
               )}
-
             </p>
 
 
             <span
               class="tag ${event.statusClass}"
             >
-
               ${escapeHTML(
                 event.cost
               )}
-
             </span>
 
 
@@ -952,9 +859,7 @@ function renderHomepageEvents() {
               class="event-card-link"
               data-event-id="${escapeHTML(event.id)}"
             >
-
               More info →
-
             </button>
 
           </article>
@@ -967,7 +872,7 @@ function renderHomepageEvents() {
 
 
   // =======================================================
-  // POPUP BUTTONS
+  // HOMEPAGE POPUP BUTTONS
   // =======================================================
 
   container
@@ -1039,27 +944,22 @@ function formatShortDate(
 function escapeHTML(value) {
 
   return String(value)
-
     .replace(
       /&/g,
       "&amp;"
     )
-
     .replace(
       /</g,
       "&lt;"
     )
-
     .replace(
       />/g,
       "&gt;"
     )
-
     .replace(
       /"/g,
       "&quot;"
     )
-
     .replace(
       /'/g,
       "&#039;"
@@ -1257,7 +1157,7 @@ function closeEvent() {
 
 
 // =========================================================
-// FORMAT LONG DATE
+// LONG DATE
 // =========================================================
 
 function formatLongDate(
@@ -1275,4 +1175,219 @@ function formatLongDate(
     {
       weekday: "long",
       day: "numeric",
-      month
+      month: "long",
+      year: "numeric"
+    }
+  );
+
+}
+
+
+// =========================================================
+// MONTH NAVIGATION
+// =========================================================
+
+function previousMonth() {
+
+  currentMonth--;
+
+
+  if (
+    currentMonth < 0
+  ) {
+
+    currentMonth = 11;
+    currentYear--;
+
+  }
+
+
+  renderCalendar();
+
+}
+
+
+function nextMonth() {
+
+  currentMonth++;
+
+
+  if (
+    currentMonth > 11
+  ) {
+
+    currentMonth = 0;
+    currentYear++;
+
+  }
+
+
+  renderCalendar();
+
+}
+
+
+function goToToday() {
+
+  const today =
+    new Date();
+
+
+  currentMonth =
+    today.getMonth();
+
+
+  currentYear =
+    today.getFullYear();
+
+
+  renderCalendar();
+
+}
+
+
+// =========================================================
+// START
+// =========================================================
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    const previous =
+      document.getElementById(
+        "previous-month"
+      );
+
+
+    const next =
+      document.getElementById(
+        "next-month"
+      );
+
+
+    const today =
+      document.getElementById(
+        "today-month"
+      );
+
+
+    const close =
+      document.getElementById(
+        "event-popup-close"
+      );
+
+
+    const popup =
+      document.getElementById(
+        "event-popup"
+      );
+
+
+    // =====================================================
+    // MONTH BUTTONS
+    // =====================================================
+
+    if (previous) {
+
+      previous.addEventListener(
+        "click",
+        previousMonth
+      );
+
+    }
+
+
+    if (next) {
+
+      next.addEventListener(
+        "click",
+        nextMonth
+      );
+
+    }
+
+
+    if (today) {
+
+      today.addEventListener(
+        "click",
+        goToToday
+      );
+
+    }
+
+
+    // =====================================================
+    // POPUP CLOSE
+    // =====================================================
+
+    if (close) {
+
+      close.addEventListener(
+        "click",
+        closeEvent
+      );
+
+    }
+
+
+    if (popup) {
+
+      popup.addEventListener(
+        "click",
+        event => {
+
+          if (
+            event.target === popup
+          ) {
+
+            closeEvent();
+
+          }
+
+        }
+      );
+
+    }
+
+
+    // =====================================================
+    // ESCAPE
+    // =====================================================
+
+    document.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key === "Escape"
+        ) {
+
+          closeEvent();
+
+        }
+
+      }
+    );
+
+
+    // =====================================================
+    // LOAD ON EVERY PAGE THAT USES EVENTS.JS
+    // =====================================================
+
+    if (
+      document.getElementById(
+        "calendar-grid"
+      ) ||
+      document.getElementById(
+        "homepage-events"
+      )
+    ) {
+
+      loadEvents();
+
+    }
+
+  }
+);
