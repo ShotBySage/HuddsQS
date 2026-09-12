@@ -403,101 +403,6 @@ nav a[aria-current="page"] {
 
 
 /* =========================
-   EVENTS PAGE
-   ========================= */
-
-.event-week {
-  margin: 50px 0;
-}
-
-.event-week-title {
-  font-family: "Permanent Marker", cursive;
-  font-size: 2.5rem;
-  margin: 0 0 18px;
-}
-
-.event-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.event-item {
-  background: var(--white);
-  border: 2px solid var(--ink);
-  box-shadow: 4px 5px 0 var(--paper-dark);
-}
-
-.event-item summary {
-  list-style: none;
-  cursor: pointer;
-
-  display: grid;
-  grid-template-columns: 90px 1fr auto;
-
-  align-items: center;
-
-  gap: 20px;
-  padding: 18px 20px;
-}
-
-.event-item summary::-webkit-details-marker {
-  display: none;
-}
-
-.event-item summary::after {
-  content: "+";
-  font-size: 1.6rem;
-  font-weight: 700;
-}
-
-.event-item[open] summary::after {
-  content: "−";
-}
-
-.event-date {
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-}
-
-.event-main h3 {
-  margin: 0;
-  font-size: 1.25rem;
-}
-
-.event-main p {
-  margin: 3px 0 0;
-  color: var(--muted);
-}
-
-.event-meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  white-space: nowrap;
-}
-
-.event-meta .tag {
-  margin-top: 0;
-}
-
-.event-details {
-  border-top: 2px solid var(--ink);
-  padding: 18px 20px 22px;
-  background: var(--paper);
-}
-
-.event-details p {
-  margin: 0 0 12px;
-}
-
-.event-details p:last-child {
-  margin-bottom: 0;
-}
-
-
-/* =========================
    ABOUT
    ========================= */
 
@@ -856,15 +761,9 @@ footer a {
     position: relative;
   }
 
-
-  /* Hamburger */
-
   .menu-toggle {
     display: flex;
   }
-
-
-  /* Mobile navigation */
 
   nav {
     position: fixed;
@@ -898,11 +797,9 @@ footer a {
     overflow-y: auto;
   }
 
-
   nav.menu-open {
     transform: translateX(0);
   }
-
 
   nav a {
     font-family: "Permanent Marker", cursive;
@@ -916,21 +813,14 @@ footer a {
     text-decoration: none;
   }
 
-
   nav a:hover,
   nav a[aria-current="page"] {
     border-bottom-color: var(--ink);
   }
 
-
-  /* Stop background scrolling */
-
   body:has(nav.menu-open) {
     overflow: hidden;
   }
-
-
-  /* Hero */
 
   .hero {
     grid-template-columns: 1fr;
@@ -940,75 +830,36 @@ footer a {
     padding-top: 35px;
   }
 
-
   .hero h1 {
     font-size: clamp(3.6rem, 18vw, 6rem);
   }
-
-
-  /* Homepage events */
 
   .events .card {
     flex: 0 0 85%;
   }
 
-
-  /* About */
-
   .about-grid {
     grid-template-columns: 1fr;
   }
-
-
-  /* Resources */
 
   .resources {
     grid-template-columns: 1fr;
   }
 
-
-  /* Events page */
-
-  .event-item summary {
-    grid-template-columns: 70px 1fr auto;
-
-    gap: 12px;
-  }
-
-
-  .event-meta {
-    flex-direction: column;
-
-    align-items: flex-end;
-
-    gap: 5px;
-  }
-
-
-  /* Newsletter */
-
   .newsletter-heading {
     align-items: flex-start;
-
     flex-direction: column;
   }
-
 
   .newsletter-pdf iframe {
     height: 75vh;
-
     min-height: 600px;
   }
 
-
-  /* Founder */
-
   .founder-section {
     margin-top: 60px;
-
     padding-top: 45px;
   }
-
 
   .founder-box {
     grid-template-columns: 1fr;
@@ -1020,7 +871,6 @@ footer a {
     transform: none;
   }
 
-
   .founder-image {
     width: 75%;
 
@@ -1028,7 +878,6 @@ footer a {
 
     margin: 0 auto;
   }
-
 
   .founder-image img {
     width: 100%;
@@ -1039,7 +888,6 @@ footer a {
 
     object-fit: cover;
   }
-
 
   .founder-quote {
     font-size: 1rem;
@@ -1058,110 +906,64 @@ footer a {
     width: min(100% - 20px, 1120px);
   }
 
-
   .brand {
     gap: 10px;
   }
-
 
   .brand img {
     width: 55px;
     height: 55px;
   }
 
-
   .brand-title {
     font-size: 1.65rem;
   }
 
-
   .brand-sub {
     font-size: .58rem;
   }
-
 
   .menu-toggle {
     width: 44px;
     height: 44px;
   }
 
-
   nav a {
     font-size: 2rem;
   }
-
 
   .hero {
     padding-left: 5px;
     padding-right: 5px;
   }
 
-
   .section {
     padding: 50px 0;
   }
 
-
-  /* Events page */
-
-  .event-item summary {
-    grid-template-columns: 1fr auto;
-  }
-
-
-  .event-date {
-    grid-column: 1 / -1;
-  }
-
-
-  .event-main {
-    grid-column: 1;
-  }
-
-
-  .event-meta {
-    grid-column: 2;
-
-    grid-row: 2;
-  }
-
-
-  /* Newsletter */
-
   .newsletter-pdf iframe {
     height: 70vh;
-
     min-height: 500px;
   }
 
-
   .newsletter-item {
     align-items: flex-start;
-
     flex-direction: column;
-
     gap: 5px;
   }
-
-
-  /* Founder */
 
   .founder-box {
     padding: 15px;
   }
 
-
   .founder-image {
     width: 85%;
-
     max-width: 280px;
   }
-
 
   .founder-quote {
     font-size: .98rem;
   }
-
 
   .founder-name strong {
     font-size: 1.25rem;
