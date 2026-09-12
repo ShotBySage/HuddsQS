@@ -62,33 +62,27 @@ async function loadEvents() {
             event.ticket_types || [];
 
 
-          const hasTickets =
+          const ticketsAvailable =
             event.tickets_available === true ||
             event.tickets_available === "true";
 
 
-          const hasFreeTicket =
-            ticketTypes.some(
-              ticket => Number(ticket.price) === 0
+          const freeTickets =
+            ticketTypes.some(ticket =>
+              Number(ticket.price) === 0
             );
 
 
-          const hasPaidTicket =
-            ticketTypes.some(
-              ticket => Number(ticket.price) > 0
-            );
+          let cost;
+          let statusClass;
 
 
-          let cost = "PAID";
-          let statusClass = "paid";
-
-
-          if (!hasTickets) {
+          if (!ticketsAvailable) {
 
             cost = "SOLD OUT";
             statusClass = "sold-out";
 
-          } else if (hasFreeTicket && !hasPaidTicket) {
+          } else if (freeTickets) {
 
             cost = "FREE TICKETS";
             statusClass = "free";
@@ -146,7 +140,6 @@ async function loadEvents() {
       document.getElementById(
         "homepage-events"
       );
-
 
     const eventsPage =
       document.getElementById(
