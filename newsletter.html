@@ -6,6 +6,55 @@
 <title>Newsletter | Hudds Queer Social</title>
 <meta name="description" content="Hudds Queer Social newsletters — community news, events and updates from Huddersfield.">
 <link rel="stylesheet" href="style.css">
+<style>
+.newsletter-pdf {
+  width: 100%;
+  background: var(--paper-dark);
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  padding: 18px;
+}
+
+.newsletter-page {
+  width: min(900px, 100%);
+  margin: 0 auto 22px;
+  background: white;
+  box-shadow: 5px 6px 0 rgba(17,17,17,.12);
+}
+
+.newsletter-page:last-child {
+  margin-bottom: 0;
+}
+
+.newsletter-page canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.newsletter-loading {
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-weight: 700;
+}
+
+.newsletter-loading a {
+  font-weight: 800;
+}
+
+@media (max-width: 600px) {
+  .newsletter-pdf {
+    padding: 8px;
+  }
+
+  .newsletter-page {
+    margin-bottom: 14px;
+    box-shadow: 3px 4px 0 rgba(17,17,17,.12);
+  }
+}
+</style>
 </head>
 <body>
 <div class="site">
@@ -120,8 +169,10 @@ async function loadNewsletter() {
 
     if (loading) {
       loading.innerHTML = `
-        <p>We couldn't display the newsletter here.</p>
-        <a href="${pdfUrl}" target="_blank" rel="noopener">Open the PDF instead →</a>
+        <div>
+          <p>We couldn't display the newsletter here.</p>
+          <a href="${pdfUrl}" target="_blank" rel="noopener">Open the PDF instead →</a>
+        </div>
       `;
     }
   }
