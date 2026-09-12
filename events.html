@@ -3,23 +3,29 @@
 
 <head>
 
-<meta charset="utf-8">
+  <meta charset="utf-8">
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1"
->
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
 
-<title>Events | Hudds Queer Social</title>
+  <title>Events | Hudds Queer Social</title>
 
-<meta
-  name="description"
-  content="Upcoming events from Hudds Queer Social and our wider community in Huddersfield."
->
+  <meta
+    name="description"
+    content="Upcoming events, socials and activities from Hudds Queer Social and our wider community in Huddersfield."
+  >
 
-<link rel="stylesheet" href="style.css">
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
 
-<link rel="stylesheet" href="events.css">
+  <link
+    rel="stylesheet"
+    href="events.css"
+  >
 
 </head>
 
@@ -29,13 +35,18 @@
 <div class="site">
 
 
-  <!-- HEADER -->
+  <!-- =========================
+       HEADER
+       ========================= -->
 
   <header>
 
     <div class="topline">
 
-      <a class="brand" href="index.html">
+      <a
+        class="brand"
+        href="index.html"
+      >
 
         <img
           src="assets/hqs-logo.jpg"
@@ -112,9 +123,11 @@
   </header>
 
 
-  <!-- MAIN -->
+  <!-- =========================
+       MAIN
+       ========================= -->
 
-  <main class="page">
+  <main class="page events-page">
 
     <div class="kicker">
       Come along
@@ -126,40 +139,52 @@
     </h1>
 
 
-    <p class="page-intro">
+    <p class="page-intro events-page-intro">
       Discover upcoming events, socials and activities from Hudds Queer Social
-      and our wider community in Huddersfield.
+      and our wider community.
     </p>
 
 
-    <!-- EVENT CALENDAR -->
+    <!-- =========================
+         CALENDAR HEADER
+         ========================= -->
 
-    <section
-      class="events-calendar"
-      aria-label="Events calendar"
-    >
+    <div class="calendar-header">
 
-      <div class="calendar-header">
+      <h2
+        id="calendar-month"
+        class="calendar-month"
+      >
+        Loading...
+      </h2>
+
+
+      <div class="calendar-controls">
 
         <button
+          id="previous-month"
+          class="calendar-button"
           type="button"
-          id="calendar-prev"
-          class="calendar-nav"
           aria-label="Previous month"
         >
           ←
         </button>
 
 
-        <h2 id="calendar-month">
-          Loading...
-        </h2>
+        <button
+          id="today-month"
+          class="calendar-button"
+          type="button"
+          aria-label="Go to current month"
+        >
+          ●
+        </button>
 
 
         <button
+          id="next-month"
+          class="calendar-button"
           type="button"
-          id="calendar-next"
-          class="calendar-nav"
           aria-label="Next month"
         >
           →
@@ -167,48 +192,134 @@
 
       </div>
 
+    </div>
+
+
+    <!-- =========================
+         CALENDAR
+         ========================= -->
+
+    <section
+      class="calendar"
+      aria-label="Events calendar"
+    >
+
+
+      <!-- DAYS OF WEEK -->
 
       <div class="calendar-weekdays">
 
-        <div>Mon</div>
-        <div>Tue</div>
-        <div>Wed</div>
-        <div>Thu</div>
-        <div>Fri</div>
-        <div>Sat</div>
-        <div>Sun</div>
+        <div class="calendar-weekday">
+          Mon
+        </div>
+
+        <div class="calendar-weekday">
+          Tue
+        </div>
+
+        <div class="calendar-weekday">
+          Wed
+        </div>
+
+        <div class="calendar-weekday">
+          Thu
+        </div>
+
+        <div class="calendar-weekday">
+          Fri
+        </div>
+
+        <div class="calendar-weekday">
+          Sat
+        </div>
+
+        <div class="calendar-weekday">
+          Sun
+        </div>
 
       </div>
 
 
+      <!-- DAYS INSERTED BY JAVASCRIPT -->
+
       <div
-        id="events-calendar-grid"
+        id="calendar-grid"
         class="calendar-grid"
       >
 
-        <p class="calendar-loading">
-          Loading events...
-        </p>
-
       </div>
 
     </section>
 
 
-    <!-- SELECTED DAY EVENTS -->
+    <!-- =========================
+         EVENT POPUP
+         ========================= -->
 
-    <section
-      id="selected-events"
-      class="selected-events"
-      aria-live="polite"
+    <div
+      id="event-popup"
+      class="event-popup"
+      aria-hidden="true"
     >
 
-    </section>
+      <div
+        class="event-popup-box"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="event-popup-title"
+      >
+
+        <button
+          id="event-popup-close"
+          class="event-popup-close"
+          type="button"
+          aria-label="Close event"
+        >
+          ×
+        </button>
+
+
+        <div
+          id="event-popup-date"
+          class="event-popup-date"
+        >
+        </div>
+
+
+        <h2
+          id="event-popup-title"
+          class="event-popup-title"
+        >
+        </h2>
+
+
+        <div
+          id="event-popup-meta"
+          class="event-popup-meta"
+        >
+        </div>
+
+
+        <div
+          id="event-popup-description"
+          class="event-popup-description"
+        >
+        </div>
+
+
+        <div id="event-popup-ticket">
+        </div>
+
+      </div>
+
+    </div>
 
   </main>
 
 
-  <!-- FOOTER -->
+  <!-- =========================
+       FOOTER
+       ========================= -->
 
   <footer>
 
@@ -257,16 +368,19 @@
 
   </footer>
 
-
 </div>
 
 
-<!-- EVENTS SCRIPT -->
+<!-- =========================
+     EVENTS SCRIPT
+     ========================= -->
 
 <script src="events.js"></script>
 
 
-<!-- MOBILE MENU -->
+<!-- =========================
+     MOBILE MENU
+     ========================= -->
 
 <script>
 
@@ -296,7 +410,6 @@ function toggleMenu() {
 }
 
 </script>
-
 
 </body>
 
