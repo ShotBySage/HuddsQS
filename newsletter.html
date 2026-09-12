@@ -30,10 +30,12 @@
     </nav>
   </div>
 </header>
+
 <main class="page">
   <div class="kicker">Monthly newsletter</div>
   <h1 class="page-title under">Newsletter</h1>
   <p class="page-intro">Keep up with what's happening in the Hudds Queer Social community. Our newsletters contain upcoming events, community news and updates.</p>
+
   <section class="newsletter-current">
     <div class="newsletter-heading">
       <div>
@@ -42,11 +44,13 @@
       </div>
       <a href="newsletter/HQS%20Newsletter_20260912_192536_0000.pdf" target="_blank" rel="noopener">Open PDF ↗</a>
     </div>
-    <div class="newsletter-pdf">
-      <iframe src="newsletter/HQS%20Newsletter_20260912_192536_0000.pdf" title="Hudds Queer Social September 2026 newsletter"></iframe>
+
+    <div class="newsletter-pdf" id="newsletter-viewer" aria-label="September 2026 newsletter">
+      <div class="newsletter-loading" id="newsletter-loading">Loading newsletter…</div>
     </div>
   </section>
 </main>
+
 <footer>
   <div>
     <strong>Hudds Queer Social</strong><br>
@@ -63,6 +67,8 @@
   </div>
 </footer>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
 function toggleMenu() {
   const nav = document.getElementById("main-navigation");
@@ -71,6 +77,57 @@ function toggleMenu() {
   button.setAttribute("aria-expanded", isOpen);
   button.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
 }
+
+const pdfUrl = "newsletter/HQS%20Newsletter_20260912_192536_0000.pdf";
+const viewer = document.getElementById("newsletter-viewer");
+const loading = document.getElementById("newsletter-loading");
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+async function loadNewsletter() {
+  try {
+    const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+
+    if (loading) loading.remove();
+
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+      const page = await pdf.getPage(pageNumber);
+      const viewport = page.getViewport({ scale: 1.5 });
+      const outputScale = window.devicePixelRatio || 1;
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "newsletter-page";
+
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+
+      canvas.width = Math.floor(viewport.width * outputScale);
+      canvas.height = Math.floor(viewport.height * outputScale);
+      canvas.style.width = "100%";
+      canvas.style.height = "auto";
+
+      wrapper.appendChild(canvas);
+      viewer.appendChild(wrapper);
+
+      await page.render({
+        canvasContext: context,
+        viewport: viewport,
+        transform: outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null
+      }).promise;
+    }
+  } catch (error) {
+    console.error("Newsletter error:", error);
+
+    if (loading) {
+      loading.innerHTML = `
+        <p>We couldn't display the newsletter here.</p>
+        <a href="${pdfUrl}" target="_blank" rel="noopener">Open the PDF instead →</a>
+      `;
+    }
+  }
+}
+
+loadNewsletter();
 </script>
 </body>
 </html>
