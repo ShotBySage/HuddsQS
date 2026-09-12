@@ -30,9 +30,9 @@
 .calendar-event-time { display: block; margin-bottom: 2px; font-size: .62rem; font-weight: 800; text-transform: uppercase; }
 .calendar-event-title { display: block; }
 
-/* FREE = LIGHT PINK / PAID = RED */
-.calendar-event.free { background: var(--pink); }
-.calendar-event.paid { background: var(--accent); color: white; }
+/* FREE = BLUE / PAID = PINK */
+.calendar-event.free { background: var(--blue); color: var(--ink); }
+.calendar-event.paid { background: var(--pink); color: var(--ink); }
 .calendar-event.sold-out { background: var(--paper-dark); color: var(--muted); }
 
 .event-popup { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 25px; background: rgba(17,17,17,.55); z-index: 2000; }
