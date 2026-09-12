@@ -48,7 +48,8 @@ async function loadEvents() {
     events =
       (data.data || [])
         .map(convertEvent)
-        .filter(Boolean);
+        .filter(Boolean)
+        .filter(event => !hasEventEnded(event));
 
 
     renderCalendar();
@@ -124,9 +125,17 @@ function convertEvent(event) {
   }
 
 
+  // =======================================================
+  // START DATE
+  // =======================================================
+
   const date =
     start.substring(0, 10);
 
+
+  // =======================================================
+  // START TIME
+  // =======================================================
 
   let time = "";
 
@@ -149,6 +158,24 @@ function convertEvent(event) {
       formatTime(timePart);
 
   }
+
+
+  // =======================================================
+  // END TIME
+  // =======================================================
+
+  const end =
+    event.end?.iso ||
+    event.end?.datetime ||
+    null;
+
+
+  // Keep the complete ISO timestamp.
+  // This lets JavaScript compare the actual
+  // ending time against the current time.
+
+  const endDateTime =
+    end || null;
 
 
   // =======================================================
@@ -197,6 +224,10 @@ function convertEvent(event) {
   }
 
 
+  // =======================================================
+  // RETURN EVENT
+  // =======================================================
+
   return {
 
     id:
@@ -210,6 +241,14 @@ function convertEvent(event) {
 
     time:
       time,
+
+
+    startDateTime:
+      start,
+
+
+    endDateTime:
+      endDateTime,
 
 
     title:
@@ -247,6 +286,49 @@ function convertEvent(event) {
 
 
 // =========================================================
+// CHECK WHETHER EVENT HAS ENDED
+// =========================================================
+
+function hasEventEnded(event) {
+
+  // If Ticket Tailor gives us an end time,
+  // use that exact time.
+
+  if (
+    event.endDateTime
+  ) {
+
+    const end =
+      new Date(
+        event.endDateTime
+      );
+
+
+    return end.getTime() <= Date.now();
+
+  }
+
+
+  // =======================================================
+  // FALLBACK
+  // =======================================================
+  // If there is no end datetime, treat the event as
+  // lasting until the end of its listed date.
+
+  const fallbackEnd =
+    new Date(
+      `${event.date}T23:59:59`
+    );
+
+
+  return (
+    fallbackEnd.getTime() <= Date.now()
+  );
+
+}
+
+
+// =========================================================
 // FORMAT TIME
 // =========================================================
 
@@ -268,6 +350,7 @@ function formatTime(timeString) {
 
   const hours =
     Number(parts[0]);
+
 
   const minutes =
     parts[1];
@@ -431,6 +514,20 @@ function isSameDate(
 
 
 // =========================================================
+// GET CURRENT EVENTS
+// =========================================================
+
+function getActiveEvents() {
+
+  return events.filter(
+    event =>
+      !hasEventEnded(event)
+  );
+
+}
+
+
+// =========================================================
 // RENDER CALENDAR
 // =========================================================
 
@@ -451,6 +548,15 @@ function renderCalendar() {
   if (!grid || !monthTitle) {
     return;
   }
+
+
+  // Remove events that have ended.
+
+  events =
+    events.filter(
+      event =>
+        !hasEventEnded(event)
+    );
 
 
   monthTitle.textContent =
@@ -495,7 +601,9 @@ function renderCalendar() {
       "calendar-day empty";
 
 
-    grid.appendChild(empty);
+    grid.appendChild(
+      empty
+    );
 
   }
 
@@ -549,7 +657,9 @@ function renderCalendar() {
       day;
 
 
-    cell.appendChild(number);
+    cell.appendChild(
+      number
+    );
 
 
     // =====================================================
@@ -565,7 +675,7 @@ function renderCalendar() {
 
 
     const dayEvents =
-      events.filter(
+      getActiveEvents().filter(
         event =>
           isSameDate(
             event,
@@ -623,7 +733,9 @@ function renderCalendar() {
     );
 
 
-    grid.appendChild(cell);
+    grid.appendChild(
+      cell
+    );
 
   }
 
@@ -708,6 +820,17 @@ function escapeHTML(value) {
 
 function openEvent(event) {
 
+  // Don't open events which have ended.
+
+  if (
+    hasEventEnded(event)
+  ) {
+
+    return;
+
+  }
+
+
   const popup =
     document.getElementById(
       "event-popup"
@@ -783,15 +906,21 @@ function openEvent(event) {
   meta.innerHTML = `
 
     <span>
-      ${escapeHTML(event.time || "Time TBC")}
+      ${escapeHTML(
+        event.time || "Time TBC"
+      )}
     </span>
 
     <span>
-      ${escapeHTML(event.venue)}
+      ${escapeHTML(
+        event.venue
+      )}
     </span>
 
     <span>
-      ${escapeHTML(event.cost)}
+      ${escapeHTML(
+        event.cost
+      )}
     </span>
 
   `;
@@ -804,7 +933,9 @@ function openEvent(event) {
   description.innerHTML = `
 
     <p>
-      ${escapeHTML(event.description)}
+      ${escapeHTML(
+        event.description
+      )}
     </p>
 
   `;
@@ -993,7 +1124,6 @@ document.addEventListener(
   "DOMContentLoaded",
   () => {
 
-
     const previous =
       document.getElementById(
         "previous-month"
@@ -1064,7 +1194,9 @@ document.addEventListener(
     }
 
 
-    // Close by clicking outside popup
+    // =====================================================
+    // CLOSE BY CLICKING OUTSIDE POPUP
+    // =====================================================
 
     if (popup) {
 
@@ -1086,7 +1218,9 @@ document.addEventListener(
     }
 
 
-    // Close with Escape
+    // =====================================================
+    // CLOSE WITH ESCAPE
+    // =====================================================
 
     document.addEventListener(
       "keydown",
@@ -1104,7 +1238,12 @@ document.addEventListener(
     );
 
 
+    // =====================================================
+    // LOAD EVENTS
+    // =====================================================
+
     loadEvents();
+
 
   }
 );
