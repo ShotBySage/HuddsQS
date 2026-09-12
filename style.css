@@ -1158,3 +1158,6 @@ footer a {
   }
 
 }
+.tag.sold-out {
+  color: red;
+}
