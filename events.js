@@ -24,19 +24,23 @@ async function loadEvents() {
       await response.json();
 
 
-    // Convert Ticket Tailor events into our website format
+    // Convert Ticket Tailor events
+    // into our website format
 
     events =
       (data.data || [])
         .map(event => {
 
           const start =
-            event.start?.datetime || event.start?.date;
+            event.start?.datetime ||
+            event.start?.date;
 
           if (!start) return null;
 
+
           const date =
             start.split("T")[0];
+
 
           const time =
             start.includes("T")
@@ -50,6 +54,53 @@ async function loadEvents() {
               : "";
 
 
+          // =========================
+          // TICKET STATUS
+          // =========================
+
+          const ticketTypes =
+            event.ticket_types || [];
+
+
+          const hasTickets =
+            event.tickets_available === true ||
+            event.tickets_available === "true";
+
+
+          const hasFreeTicket =
+            ticketTypes.some(
+              ticket => Number(ticket.price) === 0
+            );
+
+
+          const hasPaidTicket =
+            ticketTypes.some(
+              ticket => Number(ticket.price) > 0
+            );
+
+
+          let cost = "PAID";
+          let statusClass = "paid";
+
+
+          if (!hasTickets) {
+
+            cost = "SOLD OUT";
+            statusClass = "sold-out";
+
+          } else if (hasFreeTicket && !hasPaidTicket) {
+
+            cost = "FREE TICKETS";
+            statusClass = "free";
+
+          } else {
+
+            cost = "PAID";
+            statusClass = "paid";
+
+          }
+
+
           return {
 
             date: date,
@@ -57,23 +108,25 @@ async function loadEvents() {
             time: time,
 
             title:
-              event.name || "Untitled event",
+              event.name ||
+              "Untitled event",
 
             venue:
               event.venue?.name ||
               "Location to be announced",
 
-            cost:
-              event.ticket_types?.length
-                ? "Tickets available"
-                : "See event details",
+            cost: cost,
+
+            statusClass: statusClass,
 
             description:
               event.description ||
               "See the Ticket Tailor listing for more information.",
 
             url:
-              event.url || "#"
+              event.checkout_url ||
+              event.url ||
+              "#"
 
           };
 
@@ -88,11 +141,17 @@ async function loadEvents() {
 
     console.error("Events error:", error);
 
+
     const homepage =
-      document.getElementById("homepage-events");
+      document.getElementById(
+        "homepage-events"
+      );
+
 
     const eventsPage =
-      document.getElementById("events-page-list");
+      document.getElementById(
+        "events-page-list"
+      );
 
 
     if (homepage) {
@@ -144,7 +203,8 @@ function getUpcomingEvents() {
 
       const eventDate =
         new Date(
-          event.date + "T23:59:59"
+          event.date +
+          "T23:59:59"
         );
 
       return eventDate >= today;
@@ -167,7 +227,8 @@ function formatDate(dateString) {
 
   const date =
     new Date(
-      dateString + "T12:00:00"
+      dateString +
+      "T12:00:00"
     );
 
 
@@ -186,7 +247,8 @@ function formatShortDate(dateString) {
 
   const date =
     new Date(
-      dateString + "T12:00:00"
+      dateString +
+      "T12:00:00"
     );
 
 
@@ -258,7 +320,7 @@ function loadHomepageEvents() {
             ${event.venue}
           </p>
 
-          <span class="tag">
+          <span class="tag ${event.statusClass}">
             ${event.cost}
           </span>
 
@@ -336,7 +398,7 @@ function loadEventsPage() {
                 ${event.time}
               </span>
 
-              <span class="tag">
+              <span class="tag ${event.statusClass}">
                 ${event.cost}
               </span>
 
@@ -350,6 +412,7 @@ function loadEventsPage() {
             <p>
               ${event.description}
             </p>
+
 
             <p>
 
