@@ -16,9 +16,18 @@ async function loadEvents() {
     const response =
       await fetch("/api/events");
 
+
     if (!response.ok) {
-      throw new Error("Could not load Ticket Tailor events");
+
+      const errorText =
+        await response.text();
+
+      throw new Error(
+        `API returned ${response.status}: ${errorText}`
+      );
+
     }
+
 
     const data =
       await response.json();
@@ -133,13 +142,17 @@ async function loadEvents() {
 
   } catch (error) {
 
-    console.error("Events error:", error);
+    console.error(
+      "Events error:",
+      error
+    );
 
 
     const homepage =
       document.getElementById(
         "homepage-events"
       );
+
 
     const eventsPage =
       document.getElementById(
@@ -182,6 +195,7 @@ function getUpcomingEvents() {
   const today =
     new Date();
 
+
   today.setHours(
     0,
     0,
@@ -199,6 +213,7 @@ function getUpcomingEvents() {
           event.date +
           "T23:59:59"
         );
+
 
       return eventDate >= today;
 
@@ -266,6 +281,7 @@ function loadHomepageEvents() {
     document.getElementById(
       "homepage-events"
     );
+
 
   if (!container) return;
 
@@ -337,6 +353,7 @@ function loadEventsPage() {
       "events-page-list"
     );
 
+
   if (!container) return;
 
 
@@ -373,6 +390,7 @@ function loadEventsPage() {
               ${formatShortDate(event.date)}
             </div>
 
+
             <div class="event-main">
 
               <h3>
@@ -385,11 +403,13 @@ function loadEventsPage() {
 
             </div>
 
+
             <div class="event-meta">
 
               <span>
                 ${event.time}
               </span>
+
 
               <span class="tag ${event.statusClass}">
                 ${event.cost}
@@ -429,6 +449,7 @@ function loadEventsPage() {
               event.url !== "#"
                 ? `
                   <p>
+
                     <a
                       href="${event.url}"
                       target="_blank"
@@ -436,6 +457,7 @@ function loadEventsPage() {
                     >
                       View tickets →
                     </a>
+
                   </p>
                 `
                 : ""
