@@ -393,6 +393,16 @@ nav a[aria-current="page"] {
 
 
 /* =========================
+   TICKET STATUS
+   ========================= */
+
+.tag.sold-out {
+  color: #d00000;
+  border-color: #d00000;
+}
+
+
+/* =========================
    EVENTS PAGE
    ========================= */
 
@@ -1157,7 +1167,4 @@ footer a {
     font-size: 1.25rem;
   }
 
-}
-.tag.sold-out {
-  color: red;
 }
