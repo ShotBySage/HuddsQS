@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en-GB">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <title>Blog | Hudds Queer Social</title>
+
+  <meta
+    name="description"
+    content="News, stories, thoughts and updates from Hudds Queer Social."
+  >
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="blog.css">
+
+</head>
+
+
+<body>
+
+<div class="site">
+
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <header>
+
+    <div class="topline">
+
+      <a
+        class="brand"
+        href="index.html"
+      >
+
+        <img
+          src="assets/hqs-logo.jpg"
+          alt="Hudds Queer Social logo"
+        >
+
+        <div>
+
+          <div class="brand-title">
+            Hudds Queer Social
+          </div>
+
+          <div class="brand-sub">
+            Huddersfield · LGBTQIA+ Community
+          </div>
+
+        </div>
+
+      </a>
+
+
+      <!-- MOBILE MENU -->
+
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+        aria-controls="main-navigation"
+        onclick="toggleMenu()"
+      >
+        ☰
+      </button>
+
+
+      <!-- NAVIGATION -->
+
+      <nav
+        id="main-navigation"
+        aria-label="Main navigation"
+      >
+
+        <a href="index.html">
+          Home
+        </a>
+
+        <a href="about.html">
+          About
+        </a>
+
+        <a href="events.html">
+          Events
+        </a>
+
+        <a href="community.html">
+          Community
+        </a>
+
+        <a
+          href="blog.html"
+          aria-current="page"
+        >
+          Blog
+        </a>
+
+        <a href="newsletter.html">
+          Newsletter
+        </a>
+
+        <a href="contact.html">
+          Contact
+        </a>
+
+      </nav>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <main class="page blog-page">
+
+
+    <div class="kicker">
+      From the community
+    </div>
+
+
+    <h1 class="page-title under">
+      Blog
+    </h1>
+
+
+    <p class="page-intro">
+      News, stories, thoughts and updates from Hudds Queer Social.
+    </p>
+
+
+    <!-- ===================================================
+         BLOG POSTS
+    ==================================================== -->
+
+    <section
+      class="blog-posts"
+      aria-label="Blog posts"
+    >
+
+      <div id="blog-list">
+
+        <p>
+          Loading posts...
+        </p>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <footer>
+
+    <div>
+
+      <strong>
+        Hudds Queer Social
+      </strong>
+
+      <br>
+
+      Creating space for our community.
+
+    </div>
+
+
+    <div>
+
+      <a
+        href="https://www.instagram.com/huddsqueersocial?stkn=bHljdDIxYmRwODU="
+        target="_blank"
+        rel="noopener"
+      >
+        Instagram
+      </a>
+
+      ·
+
+      <span class="link-needed">
+        Facebook — LINK NEEDED
+      </span>
+
+      ·
+
+      <span class="link-needed">
+        Join the community — FORM NEEDED
+      </span>
+
+      <br>
+
+      <small>
+        © 2026 Hudds Queer Social
+      </small>
+
+    </div>
+
+  </footer>
+
+
+</div>
+
+
+<!-- =======================================================
+     BLOG SCRIPT
+======================================================== -->
+
+<script src="blog.js"></script>
+
+
+<!-- =======================================================
+     MOBILE MENU
+======================================================== -->
+
+<script>
+
+function toggleMenu() {
+
+  const nav =
+    document.getElementById(
+      "main-navigation"
+    );
+
+  const button =
+    document.querySelector(
+      ".menu-toggle"
+    );
+
+
+  const isOpen =
+    nav.classList.toggle(
+      "menu-open"
+    );
+
+
+  button.setAttribute(
+    "aria-expanded",
+    isOpen
+  );
+
+
+  button.setAttribute(
+    "aria-label",
+    isOpen
+      ? "Close navigation"
+      : "Open navigation"
+  );
+
+}
+
+</script>
+
+
+</body>
+
+</html>
