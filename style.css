@@ -970,3 +970,32 @@ footer a {
   }
 
 }
+
+.event-card-link {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.event-card-link:hover {
+  color: var(--accent);
+}
+
+.homepage-events-empty {
+  padding: 25px;
+  border: 2px solid var(--ink);
+  background: var(--white);
+  box-shadow: 5px 6px 0 var(--paper-dark);
+}
+
+.homepage-events-empty p {
+  margin-top: 0;
+}
