@@ -4,6 +4,8 @@
 
 let events = [];
 
+let calendarDate = new Date();
+
 
 // =========================
 // LOAD TICKET TAILOR EVENTS
@@ -32,9 +34,6 @@ async function loadEvents() {
     const data =
       await response.json();
 
-
-    // Convert Ticket Tailor events
-    // into our website format
 
     events =
       (data.data || [])
@@ -137,7 +136,11 @@ async function loadEvents() {
         .filter(Boolean);
 
 
+    // Homepage stays the same
     loadHomepageEvents();
+
+
+    // Events page becomes calendar
     loadEventsPage();
 
   } catch (error) {
@@ -154,9 +157,9 @@ async function loadEvents() {
       );
 
 
-    const eventsPage =
+    const calendar =
       document.getElementById(
-        "events-page-list"
+        "events-calendar-grid"
       );
 
 
@@ -171,10 +174,10 @@ async function loadEvents() {
     }
 
 
-    if (eventsPage) {
+    if (calendar) {
 
-      eventsPage.innerHTML = `
-        <p>
+      calendar.innerHTML = `
+        <p class="calendar-error">
           Events could not be loaded right now.
         </p>
       `;
@@ -321,13 +324,16 @@ function loadHomepageEvents() {
             ${formatDate(event.date)} · ${event.time}
           </div>
 
+
           <h3>
             ${event.title}
           </h3>
 
+
           <p>
             ${event.venue}
           </p>
+
 
           <span class="tag ${event.statusClass}">
             ${event.cost}
@@ -348,28 +354,364 @@ function loadHomepageEvents() {
 
 function loadEventsPage() {
 
+  const calendar =
+    document.getElementById(
+      "events-calendar-grid"
+    );
+
+
+  if (!calendar) return;
+
+
+  setupCalendarButtons();
+
+  renderCalendar();
+
+}
+
+
+// =========================
+// CALENDAR BUTTONS
+// =========================
+
+function setupCalendarButtons() {
+
+  const previous =
+    document.getElementById(
+      "calendar-prev"
+    );
+
+
+  const next =
+    document.getElementById(
+      "calendar-next"
+    );
+
+
+  if (previous) {
+
+    previous.onclick = () => {
+
+      calendarDate.setMonth(
+        calendarDate.getMonth() - 1
+      );
+
+      renderCalendar();
+
+    };
+
+  }
+
+
+  if (next) {
+
+    next.onclick = () => {
+
+      calendarDate.setMonth(
+        calendarDate.getMonth() + 1
+      );
+
+      renderCalendar();
+
+    };
+
+  }
+
+}
+
+
+// =========================
+// RENDER CALENDAR
+// =========================
+
+function renderCalendar() {
+
+  const calendar =
+    document.getElementById(
+      "events-calendar-grid"
+    );
+
+
+  const monthTitle =
+    document.getElementById(
+      "calendar-month"
+    );
+
+
+  if (!calendar || !monthTitle) return;
+
+
+  const year =
+    calendarDate.getFullYear();
+
+
+  const month =
+    calendarDate.getMonth();
+
+
+  monthTitle.textContent =
+    new Date(
+      year,
+      month,
+      1
+    ).toLocaleDateString(
+      "en-GB",
+      {
+        month: "long",
+        year: "numeric"
+      }
+    );
+
+
+  // First day of month
+  // Convert Sunday = 0 into
+  // Monday = 0
+
+  let firstDay =
+    new Date(
+      year,
+      month,
+      1
+    ).getDay();
+
+
+  firstDay =
+    firstDay === 0
+      ? 6
+      : firstDay - 1;
+
+
+  const daysInMonth =
+    new Date(
+      year,
+      month + 1,
+      0
+    ).getDate();
+
+
+  const today =
+    new Date();
+
+
+  today.setHours(
+    0,
+    0,
+    0,
+    0
+  );
+
+
+  let html = "";
+
+
+  // Empty cells before month starts
+
+  for (
+    let i = 0;
+    i < firstDay;
+    i++
+  ) {
+
+    html += `
+      <div class="calendar-day empty"></div>
+    `;
+
+  }
+
+
+  // Actual days
+
+  for (
+    let day = 1;
+    day <= daysInMonth;
+    day++
+  ) {
+
+    const dateString =
+      `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+
+    const dayEvents =
+      getUpcomingEvents().filter(
+        event =>
+          event.date === dateString
+      );
+
+
+    const thisDate =
+      new Date(
+        year,
+        month,
+        day
+      );
+
+
+    const isToday =
+      thisDate.getTime() ===
+      today.getTime();
+
+
+    const hasEvents =
+      dayEvents.length > 0;
+
+
+    html += `
+
+      <button
+        type="button"
+        class="
+          calendar-day
+          ${hasEvents ? "has-events" : ""}
+          ${isToday ? "today" : ""}
+        "
+        data-date="${dateString}"
+      >
+
+        <span class="calendar-day-number">
+          ${day}
+        </span>
+
+        ${
+          hasEvents
+            ? `
+              <span class="calendar-event-count">
+                ${dayEvents.length}
+                ${dayEvents.length === 1 ? "event" : "events"}
+              </span>
+            `
+            : ""
+        }
+
+      </button>
+
+    `;
+
+  }
+
+
+  calendar.innerHTML =
+    html;
+
+
+  // Add click handlers
+
+  calendar
+    .querySelectorAll(
+      ".calendar-day:not(.empty)"
+    )
+    .forEach(day => {
+
+      day.addEventListener(
+        "click",
+        () => {
+
+          showEventsForDate(
+            day.dataset.date
+          );
+
+        }
+      );
+
+    });
+
+
+  // Automatically show first
+  // event in the month if there is one
+
+  const firstEvent =
+    getUpcomingEvents()
+      .find(event => {
+
+        const eventDate =
+          new Date(
+            event.date +
+            "T12:00:00"
+          );
+
+
+        return (
+          eventDate.getFullYear() === year &&
+          eventDate.getMonth() === month
+        );
+
+      });
+
+
+  if (firstEvent) {
+
+    showEventsForDate(
+      firstEvent.date
+    );
+
+  } else {
+
+    clearSelectedEvents();
+
+  }
+
+}
+
+
+// =========================
+// SHOW EVENTS FOR DATE
+// =========================
+
+function showEventsForDate(
+  dateString
+) {
+
   const container =
     document.getElementById(
-      "events-page-list"
+      "selected-events"
     );
 
 
   if (!container) return;
 
 
-  const upcomingEvents =
-    getUpcomingEvents();
+  const selectedEvents =
+    getUpcomingEvents().filter(
+      event =>
+        event.date === dateString
+    );
+
+
+  const date =
+    new Date(
+      dateString +
+      "T12:00:00"
+    );
+
+
+  const heading =
+    date.toLocaleDateString(
+      "en-GB",
+      {
+        weekday: "long",
+        day: "numeric",
+        month: "long"
+      }
+    );
 
 
   if (
-    upcomingEvents.length === 0
+    selectedEvents.length === 0
   ) {
 
     container.innerHTML = `
-      <p>
-        No upcoming events at the moment.
-        Check back soon!
-      </p>
+
+      <div class="selected-events-empty">
+
+        <h2>
+          ${heading}
+        </h2>
+
+        <p>
+          No events on this day.
+        </p>
+
+      </div>
+
     `;
 
     return;
@@ -377,99 +719,120 @@ function loadEventsPage() {
   }
 
 
-  container.innerHTML =
-    upcomingEvents.map(event => {
+  container.innerHTML = `
 
-      return `
+    <div class="selected-events-heading">
 
-        <details class="event-item">
+      <div class="kicker">
+        Events
+      </div>
 
-          <summary>
+      <h2>
+        ${heading}
+      </h2>
 
-            <div class="event-date">
-              ${formatShortDate(event.date)}
+    </div>
+
+
+    <div class="selected-event-list">
+
+      ${selectedEvents.map(event => {
+
+        return `
+
+          <article class="selected-event">
+
+            <div class="selected-event-time">
+              ${event.time}
             </div>
 
 
-            <div class="event-main">
+            <div class="selected-event-content">
 
               <h3>
                 ${event.title}
               </h3>
 
+
               <p>
                 ${event.venue}
               </p>
 
-            </div>
 
-
-            <div class="event-meta">
-
-              <span>
-                ${event.time}
-              </span>
+              <p>
+                ${event.description}
+              </p>
 
 
               <span class="tag ${event.statusClass}">
                 ${event.cost}
               </span>
 
+
+              ${
+                event.url !== "#"
+                  ? `
+                    <p>
+
+                      <a
+                        class="btn"
+                        href="${event.url}"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        View tickets →
+                      </a>
+
+                    </p>
+                  `
+                  : ""
+              }
+
             </div>
 
-          </summary>
+          </article>
+
+        `;
+
+      }).join("")}
+
+    </div>
+
+  `;
+
+}
 
 
-          <div class="event-details">
+// =========================
+// CLEAR SELECTED EVENTS
+// =========================
 
-            <p>
-              ${event.description}
-            </p>
+function clearSelectedEvents() {
 
-
-            <p>
-
-              <strong>Time:</strong>
-              ${event.time}
-
-              <br>
-
-              <strong>Venue:</strong>
-              ${event.venue}
-
-              <br>
-
-              <strong>Cost:</strong>
-              ${event.cost}
-
-            </p>
+  const container =
+    document.getElementById(
+      "selected-events"
+    );
 
 
-            ${
-              event.url !== "#"
-                ? `
-                  <p>
+  if (!container) return;
 
-                    <a
-                      href="${event.url}"
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      View tickets →
-                    </a>
 
-                  </p>
-                `
-                : ""
-            }
+  container.innerHTML = `
 
-          </div>
+    <div class="selected-events-empty">
 
-        </details>
+      <h2>
+        No upcoming events this month
+      </h2>
 
-      `;
+      <p>
+        Check another month using the arrows above.
+      </p>
 
-    }).join("");
+    </div>
+
+  `;
 
 }
 
